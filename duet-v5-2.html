@@ -1,0 +1,3201 @@
+
+<style>
+:root{
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --color-background-primary:#ffffff;
+  --color-background-secondary:#f1f4f6;
+  --color-text-primary:#0f172a;
+  --color-text-secondary:#1f2937;
+  --color-text-tertiary:#4b5563;
+  --color-border-primary:#0f172a;
+  --color-border-secondary:#bfc7d1;
+  --color-border-tertiary:#d7dde6;
+  --border-radius-md:12px;
+  --border-radius-lg:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:auto;}
+body{font-family:var(--font-sans);background:var(--color-background-primary);color:var(--color-text-primary);}
+.app{display:flex;flex-direction:column;user-select:none;min-height:100vh;height:auto;overflow:visible;}
+.main-work{flex:1;min-height:0;display:flex;flex-direction:column;overflow:visible;padding:8px 20px 12px;gap:0;}
+.group-composer-panels{flex:0 1 auto;min-height:0;display:flex;flex-direction:column;gap:0;}
+.composer-stack{flex:0 0 auto;min-height:0;}
+.group-debate-block{flex:0 0 auto;min-height:100vh;display:flex;flex-direction:column;margin-top:14px;gap:10px;}
+.flow-status{display:none;font-size:14px;line-height:1.5;color:var(--color-text-tertiary);opacity:0.7;font-weight:400;padding:6px 2px 0;}
+.debate-round-sep{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--color-text-tertiary);font-size:12px;font-weight:700;opacity:0.85;}
+.debate-round-sep::before,.debate-round-sep::after{content:'';flex:1;height:1px;background:var(--color-border-tertiary);}
+.debate-body .empty-label.mute-placeholder{font-weight:400;font-size:14px;line-height:1.5;color:var(--color-text-tertiary);opacity:0.7;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;border-bottom:1px solid var(--color-border-tertiary);flex-shrink:0;position:sticky;top:0;z-index:10002;background:var(--color-background-primary);}
+.logo{font-size:18px;font-weight:700;letter-spacing:-0.5px;color:var(--color-text-primary);}
+.logo span{opacity:0.35;font-weight:400;}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+.slogan{font-size:12.5px;color:var(--color-text-tertiary);opacity:0;transform:translateY(1px);letter-spacing:0.2px;}
+.slogan.show{animation:sloganIn 220ms ease forwards;}
+@keyframes sloganIn{to{opacity:0.95;transform:none;}}
+.top-actions{display:flex;align-items:center;gap:8px;}
+.top-btn{font-size:12.5px;border-radius:999px;border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);padding:5px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
+.top-btn:hover{background:var(--color-background-secondary);}
+.key-indicator{font-size:12.5px;color:var(--color-text-tertiary);white-space:nowrap;font-weight:700;}
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,0.34);display:none;align-items:center;justify-content:center;padding:24px;z-index:9999;}
+.modal-backdrop.show{display:flex;}
+.modal{width:min(560px,92vw);border-radius:18px;border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);box-shadow:0 30px 90px rgba(0,0,0,0.18);overflow:hidden;}
+.modal-h{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--color-background-secondary);border-bottom:1px solid var(--color-border-tertiary);}
+.modal-title{font-size:13px;font-weight:700;color:var(--color-text-secondary);display:flex;align-items:center;gap:8px;}
+.modal-x{width:32px;height:32px;border-radius:12px;border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);cursor:pointer;}
+.modal-b{padding:14px;}
+.field-label{font-size:12px;color:var(--color-text-tertiary);margin-bottom:6px;font-weight:700;}
+.field{width:100%;height:38px;border-radius:14px;border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:0 12px;font-size:13.5px;outline:none;}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px;}
+.pill{height:34px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:800;cursor:pointer;border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-primary);}
+.pill.primary{border-color:var(--color-border-primary);background:var(--color-text-primary);color:var(--color-background-primary);}
+.usage-list{max-height:360px;overflow:auto;border:1px solid var(--color-border-tertiary);border-radius:14px;}
+.usage-row{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-bottom:1px solid var(--color-border-tertiary);}
+.usage-row:last-child{border-bottom:none;}
+.usage-ts{font-size:12px;color:var(--color-text-tertiary);min-width:132px;font-weight:700;}
+.usage-main{min-width:0;flex:1;}
+.usage-prompt{font-size:13px;line-height:1.5;color:var(--color-text-secondary);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.usage-toks{font-size:12.5px;color:var(--color-text-secondary);white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:800;}
+.panels{display:flex;flex-shrink:0;border:1px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin:0;border-bottom-left-radius:0;border-bottom-right-radius:0;}
+.group-composer-panels .input-resize#panels-resize{border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg);border:1px solid var(--color-border-tertiary);border-top:none;margin:0;background:var(--color-background-primary);}
+.panel{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
+.panel:first-child{border-right:1px solid var(--color-border-tertiary);}
+.panel-header{height:42px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid var(--color-border-tertiary);flex-shrink:0;gap:9px;background:var(--color-background-secondary);}
+.panel-label{font-size:13px;font-weight:800;letter-spacing:-0.1px;}
+.panel-body{overflow-y:auto;padding:18px;scroll-behavior:smooth;user-select:text;position:relative;flex:1;min-height:0;}
+.panel-body::-webkit-scrollbar{width:4px;}
+.panel-body::-webkit-scrollbar-thumb{background:var(--color-border-secondary);border-radius:2px;}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.prompt-bubble{display:inline-block;background:var(--color-background-secondary);border-radius:12px 12px 4px 12px;padding:10px 14px;font-size:13.5px;color:var(--color-text-secondary);margin-bottom:18px;max-width:88%;line-height:1.55;}
+.ai-response{font-size:14px;line-height:1.85;color:var(--color-text-primary);user-select:text;padding-right:36px;white-space:pre-wrap;word-break:break-word;}
+.ai-response.prose{white-space:normal;}
+.prose .prose-p{font-size:14px;line-height:1.75;color:var(--color-text-primary);margin:0 0 0.75em;}
+.prose .prose-p:last-child{margin-bottom:0;}
+.prose .prose-h2{font-size:17px;font-weight:800;letter-spacing:-0.3px;margin:0.35em 0 0.45em;color:var(--color-text-primary);}
+.prose .prose-h3{font-size:15px;font-weight:800;letter-spacing:-0.2px;margin:0.85em 0 0.4em;color:var(--color-text-primary);}
+.prose .prose-h4{font-size:13.5px;font-weight:800;margin:0.75em 0 0.35em;color:var(--color-text-secondary);}
+.prose .prose-ul,.prose .prose-ol{margin:0.4em 0 0.85em;padding-left:1.35em;}
+.prose .prose-ul li,.prose .prose-ol li{margin:0.25em 0;font-size:14px;line-height:1.65;color:var(--color-text-primary);}
+.prose .prose-ul{list-style:disc;}
+.prose .prose-ol{list-style:decimal;}
+.prose code{font-size:12.5px;background:var(--color-background-secondary);border:1px solid var(--color-border-tertiary);padding:0.1em 0.35em;border-radius:6px;font-weight:600;}
+.prose .prose-pre{margin:0.65em 0;padding:12px 14px;background:var(--color-background-secondary);border:1px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);overflow-x:auto;}
+.prose .prose-pre code{font-size:12px;border:none;padding:0;background:transparent;font-weight:500;}
+.prose strong{font-weight:800;}
+.final-kicker{font-size:11.5px;font-weight:900;color:var(--color-text-tertiary);letter-spacing:0.45px;text-transform:uppercase;margin-bottom:10px;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;}
+.empty-icon{width:36px;height:36px;border-radius:50%;border:1px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;}
+.empty-label{font-size:12.5px;color:var(--color-text-tertiary);font-weight:700;}
+.copy-btn{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:var(--border-radius-md);border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity 0.15s,background 0.12s,border-color 0.12s;padding:0;}
+.copy-btn:hover{background:var(--color-background-secondary);border-color:var(--color-border-secondary);}
+.copy-btn.visible{opacity:1;transform:translateZ(0);}
+.input-area{padding:0;flex-shrink:0;}
+.input-wrap{position:relative;border:1px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);background:var(--color-background-secondary);transition:border-color 0.15s,box-shadow 0.15s;display:flex;flex-direction:column;overflow:hidden;}
+.input-wrap:focus-within{border-color:var(--color-border-primary);box-shadow:0 0 0 4px rgba(16,163,127,0.14);}
+.input-row{display:flex;align-items:flex-end;min-height:0;}
+.input-header{display:flex;align-items:flex-end;justify-content:space-between;padding:12px 14px 10px;border-bottom:1px solid var(--color-border-tertiary);background:var(--color-background-secondary);}
+.input-title{font-size:13px;font-weight:900;color:var(--color-text-secondary);letter-spacing:-0.1px;}
+.input-focus{font-size:12px;font-weight:800;color:#10a37f;opacity:0.95;white-space:nowrap;letter-spacing:-0.1px;}
+.composer-editor{padding:0;}
+.composer-actions{display:flex;align-items:center;justify-content:stretch;gap:10px;padding:12px 14px 14px;}
+.demo-qs-row{display:flex;align-items:flex-start;gap:12px;padding:0 14px 12px;flex-wrap:nowrap;}
+.demo-qs-label{font-size:12.5px;font-weight:900;color:var(--color-text-tertiary);white-space:nowrap;padding-top:8px;letter-spacing:-0.1px;}
+.demo-qs{display:flex;flex-wrap:nowrap;gap:10px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;}
+.demo-qs::-webkit-scrollbar{display:none;}
+.demo-qs-btn{border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;border-radius:14px;padding:8px 10px;font-size:12.0px;font-weight:800;line-height:1.25;flex:1 0 0;min-width:0;text-align:left;transition:background 0.12s,border-color 0.12s,color 0.12s,transform 0.06s,box-shadow 0.12s;box-shadow:0 8px 22px rgba(17,24,39,0.04);}
+.demo-qs-btn:hover:not(:disabled){background:var(--color-background-secondary);border-color:var(--color-border-secondary);color:var(--color-text-primary);box-shadow:0 12px 30px rgba(17,24,39,0.06);}
+.demo-qs-btn:disabled{opacity:0.6;cursor:not-allowed;}
+.demo-qs-text{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;word-break:break-word;}
+.input-field{width:100%;display:block;flex:1;resize:none;border:none;outline:none;padding:12px 14px;font-size:14px;font-family:var(--font-sans);color:var(--color-text-primary);background:transparent;line-height:1.6;overflow-y:auto;min-height:0;}
+.input-field::placeholder{color:var(--color-text-tertiary);opacity:0.7;}
+.input-field::-webkit-scrollbar{width:4px;}
+.input-field::-webkit-scrollbar-thumb{background:var(--color-border-secondary);border-radius:2px;}
+.btn-send{margin:0;height:44px;padding:0 18px;border-radius:var(--border-radius-md);font-size:14px;font-weight:1000;cursor:pointer;border:1px solid #10a37f;background:#10a37f;color:var(--color-background-primary);white-space:nowrap;transition:background 0.12s,opacity 0.12s,transform 0.06s,box-shadow 0.12s,border-color 0.12s,color 0.12s;letter-spacing:-0.25px;flex:1;width:100%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(16,163,127,0.25);}
+.btn-send:hover:not(:disabled){background:#0d8f6a;}
+.btn-send:disabled,.btn-debate-full:disabled{background:#9ccfc4!important;border-color:#7fb5a8!important;color:rgba(255,255,255,0.78)!important;opacity:1!important;cursor:not-allowed!important;box-shadow:none!important;}
+.btn-stop{margin:0;height:44px;padding:0 18px;border-radius:var(--border-radius-md);font-size:14px;font-weight:900;cursor:pointer;border:1px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);white-space:nowrap;transition:background 0.12s,opacity 0.12s,transform 0.06s;letter-spacing:-0.2px;flex:1;width:100%;display:none;align-items:center;justify-content:center;}
+.btn-stop:hover{background:var(--color-background-secondary);}
+.btn-stop:disabled{opacity:0.3;cursor:not-allowed;}
+.input-resize{height:7px;cursor:ns-resize;display:flex;align-items:center;justify-content:center;border-top:1px solid var(--color-border-tertiary);transition:background 0.15s;flex-shrink:0;}
+.input-resize:hover{background:var(--color-background-secondary);}
+.input-resize-grip{width:26px;height:3px;border-radius:3px;background:var(--color-border-secondary);}
+.attachments-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;}
+.attachment-pill{position:relative;border-radius:999px;border:1px solid var(--color-border-tertiary);background:var(--color-background-secondary);padding:3px 10px 3px 3px;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);font-weight:700;}
+.attachment-thumb{width:30px;height:20px;border-radius:7px;object-fit:cover;background:#e5e7eb;}
+.attachment-remove{border:none;background:transparent;color:var(--color-text-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0 0 0 2px;}
+.debate-bar{flex:0 0 auto;padding-top:0;}
+.debate-bar-inner{display:flex;align-items:center;gap:12px;}
+.debate-bar-inner .timer{flex:0 0 auto;}
+.debate-stack{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:visible;border:1px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-top:0;background:var(--color-background-primary);}
+.debate-zone-header{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:48px;background:var(--color-background-secondary);border-bottom:1px solid var(--color-border-tertiary);}
+.debate-zone-title{font-size:13px;font-weight:800;color:var(--color-text-secondary);display:flex;align-items:center;gap:9px;letter-spacing:-0.1px;}
+.timer{font-size:13px;font-variant-numeric:tabular-nums;color:var(--color-text-tertiary);font-weight:800;align-items:center;}
+.timer.urgent{color:#d97941;}
+.btn-debate{height:40px;padding:0 18px;border-radius:var(--border-radius-md);font-size:14px;font-weight:1000;cursor:pointer;border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-primary);white-space:nowrap;transition:background 0.12s,opacity 0.12s,border-color 0.12s,transform 0.06s,box-shadow 0.12s;box-shadow:0 10px 26px rgba(17,24,39,0.06);}
+.btn-debate-full{flex:1;width:100%;min-height:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid #10a37f;background:#10a37f;color:var(--color-background-primary);box-shadow:0 10px 30px rgba(16,163,127,0.25);transition:background 0.12s,border-color 0.12s,color 0.12s,box-shadow 0.12s;}
+.btn-debate-full:hover:not(:disabled){background:#0d8f6a;border-color:#0d8f6a;}
+.btn-debate:hover:not(:disabled){background:var(--color-background-secondary);border-color:var(--color-border-tertiary);}
+.btn-debate:disabled{opacity:0.85;cursor:not-allowed;background:var(--color-background-secondary);border-color:var(--color-border-tertiary);box-shadow:none;}
+.btn-debate.active{background:#d97941;border-color:#d97941;color:var(--color-background-primary);}
+.btn-debate-full.active{background:#0d8f6a;border-color:#0d8f6a;color:var(--color-background-primary);}
+.debate-body{flex:0 0 auto;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;user-select:text;min-height:72px;}
+.debate-body::-webkit-scrollbar{width:4px;}
+.debate-body::-webkit-scrollbar-thumb{background:var(--color-border-secondary);border-radius:2px;}
+.debate-msg{display:flex;gap:9px;align-items:flex-start;animation:fadeSlide 0.25s ease;}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.davatar{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:900;margin-top:2px;}
+.davatar.gpt{background:#d5ede7;color:#0a6049;}
+.davatar.claude{background:#f4ddd0;color:#7a3e1a;}
+.dmsg-name{font-size:12px;font-weight:900;margin-bottom:2px;color:var(--color-text-secondary);letter-spacing:-0.1px;}
+.dmsg-text{font-size:13.5px;line-height:1.75;color:var(--color-text-primary);word-break:break-word;}
+.dmsg-text.prose{font-size:14px;}
+.debate-resize{height:7px;cursor:ns-resize;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s;border-top:1px solid var(--color-border-tertiary);}
+.debate-resize:hover{background:var(--color-background-secondary);}
+.debate-resize-grip{width:32px;height:4px;border-radius:3px;background:var(--color-border-secondary);}
+.align-row{padding:12px 18px;border-top:1px solid var(--color-border-tertiary);display:flex;align-items:center;gap:14px;flex-shrink:0;background:var(--color-background-secondary);}
+.align-row.align-row--warn{background:#fff7ed;border-top-color:#fed7aa;}
+.align-label{font-size:13px;font-weight:900;color:var(--color-text-secondary);white-space:nowrap;}
+.bar-track{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;background:#10a37f;border-radius:3px;transition:width 1.4s cubic-bezier(0.4,0,0.2,1);width:0;}
+.align-row.align-row--warn .bar-fill{background:#ea580c;}
+.align-pct{font-size:13px;font-weight:900;color:#10a37f;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.align-row.align-row--warn .align-pct{color:#c2410c;}
+.align-fail-callout{margin-bottom:14px;padding:12px 14px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,#fff1f2 0%,#ffe4e6 100%);border:1px solid #fda4af;border-left:4px solid #e11d48;color:#9f1239;font-size:14px;line-height:1.6;font-weight:800;}
+.align-fail-callout strong{display:block;margin-bottom:4px;font-size:15px;}
+.final-section{padding:14px 18px;border-top:1px solid var(--color-border-tertiary);border-bottom:1px solid var(--color-border-tertiary);flex:1 1 0;min-height:72px;overflow-y:auto;max-height:none;position:relative;}
+.final-section::-webkit-scrollbar{width:4px;}
+.judging-strip{display:none;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;min-height:200px;padding:22px 18px 18px;border-top:1px solid var(--color-border-tertiary);background:var(--color-background-primary);}
+.final-aligning-inner{display:flex;flex-direction:column;align-items:center;gap:0;max-width:320px;}
+.aligning-ring-wrap{position:relative;width:92px;height:92px;flex-shrink:0;}
+.aligning-ring-svg{width:92px;height:92px;transform:rotate(-90deg);display:block;}
+.aligning-ring-bg{fill:none;stroke:var(--color-border-tertiary);stroke-width:5;}
+.aligning-ring-fg{fill:none;stroke:#10a37f;stroke-width:5;stroke-linecap:round;stroke-dasharray:175.929 175.929;stroke-dashoffset:175.929;}
+.aligning-ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:var(--color-text-secondary);font-variant-numeric:tabular-nums;}
+.aligning-copy{margin-top:16px;font-size:14px;line-height:1.55;color:var(--color-text-tertiary);text-align:center;font-weight:700;}
+.final-label{font-size:11.5px;font-weight:900;color:var(--color-text-tertiary);margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase;}
+.unified-text{font-size:14px;line-height:1.85;color:var(--color-text-primary);user-select:text;padding-right:36px;}
+.unified-text.prose .prose-p{font-size:14px;}
+.divergence{margin-top:11px;padding:8px 12px;background:#fef3ec;border-left:3px solid #d97941;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:13px;line-height:1.65;color:#7a3e1a;font-weight:700;}
+.divergence{user-select:text;-webkit-user-select:text;}
+.copy-btn-final{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:var(--border-radius-md);border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.12s,border-color 0.12s;padding:0;}
+.copy-btn-final:hover{background:var(--color-background-secondary);border-color:var(--color-border-secondary);}
+.typing-dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--color-text-tertiary);margin:0 2px;animation:dot 1.2s infinite;}
+.typing-dots span:nth-child(2){animation-delay:0.2s;}
+.typing-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes dot{0%,60%,100%{opacity:0.2;transform:scale(0.8);}30%{opacity:1;transform:scale(1);}}
+.cursor{display:inline-block;width:2px;height:14px;margin-left:1px;vertical-align:text-bottom;background:var(--color-text-secondary);animation:blink 0.8s step-end infinite;}
+@keyframes blink{50%{opacity:0;}}
+/* Welcome demo video (BYOK product tour) */
+.welcome-demo-backdrop{z-index:20000;}
+.welcome-demo-modal{width:min(720px,96vw);max-height:92vh;display:flex;flex-direction:column;}
+.welcome-demo-body{padding:0;position:relative;background:#0b0f14;}
+.welcome-demo-video-wrap{position:relative;width:100%;aspect-ratio:16/10;max-height:min(56vh,520px);background:#000;}
+.welcome-demo-video{width:100%;height:100%;object-fit:contain;display:block;}
+.welcome-demo-black{position:absolute;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:2;}
+.welcome-demo-note{padding:14px 18px;background:var(--color-background-secondary);border-top:1px solid var(--color-border-tertiary);font-size:13px;line-height:1.55;color:var(--color-text-secondary);font-weight:700;}
+.welcome-demo-note strong{color:var(--color-text-primary);}
+.welcome-demo-actions{padding:12px 18px 16px;display:flex;flex-direction:column;align-items:stretch;gap:12px;border-top:1px solid var(--color-border-tertiary);}
+.welcome-demo-start{height:44px;width:100%;border-radius:var(--border-radius-md);border:1px solid #10a37f;background:#10a37f;color:var(--color-background-primary);box-shadow:0 10px 30px rgba(16,163,127,0.25);font-size:14px;font-weight:1000;letter-spacing:-0.25px;cursor:pointer;}
+.welcome-demo-start:hover{background:#0d8f6a;border-color:#0d8f6a;}
+.welcome-demo-nomore{display:flex;align-items:center;gap:10px;color:#d1d5db;font-size:13px;font-weight:900;cursor:pointer;user-select:none;align-self:flex-end;padding:8px 10px;border-radius:12px;background:rgba(11,15,20,0.92);border:1px solid rgba(148,163,184,0.18);}
+.welcome-demo-nomore input{width:16px;height:16px;accent-color:#10a37f;}
+/* API key onboarding strip */
+.key-onboard{flex-shrink:0;padding:6px 20px;background:linear-gradient(135deg,#ecfdf5 0%,#f0fdf4 50%,#fff 100%);border-bottom:1px solid #a7f3d0;display:none;align-items:flex-start;gap:12px;position:sticky;top:56px;z-index:10001;}
+.key-onboard.show{display:flex;}
+.key-onboard-text{flex:1;min-width:0;font-size:12px;line-height:1.4;color:var(--color-text-secondary);}
+.key-onboard-text a{color:#059669;font-weight:800;text-decoration:underline;}
+.key-onboard-text code{font-size:12px;background:#fff;border:1px solid var(--color-border-tertiary);padding:2px 6px;border-radius:6px;}
+.key-onboard-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.key-onboard .pill{height:34px;}
+.key-onboard-dismiss{border:none;background:transparent;color:var(--color-text-tertiary);font-size:20px;line-height:1;cursor:pointer;padding:0 4px;font-weight:300;}
+.input-field.input-locked{background:var(--color-background-primary);color:var(--color-text-tertiary);cursor:not-allowed;}
+</style>
+
+<div class="app" id="app">
+  <header class="header">
+    <div class="brand" id="brand" title="Refresh">
+      <svg width="30" height="24" viewBox="0 0 22 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 5 C7 3 9 3 14 5 C18 6.5 20 9 20 11" fill="none" stroke="#10a37f" stroke-width="2" stroke-linecap="round"/>
+        <path d="M2 11 C7 9 9 9 14 11 C18 12.5 20 15 20 17" fill="none" stroke="#d97941" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="20" cy="11.5" r="1.8" fill="#0f172a"/>
+      </svg>
+      <span class="logo" style="font-size:20px;font-weight:900;letter-spacing:-0.6px;">duet</span>
+      <span class="slogan" id="slogan">· debate to align</span>
+    </div>
+    <div class="top-actions">
+      <span id="key-status" class="key-indicator">Preview — no API keys</span>
+      <button type="button" class="top-btn" id="key-setup-guide" onclick="openKeyGuide()" title="BYOK setup steps">
+        Key setup
+      </button>
+      <button class="top-btn" id="manage-key" onclick="openKeyModal()">
+        <span style="font-size:14px;line-height:1;">🔑</span>
+        Manage API key
+      </button>
+      <button class="top-btn" id="usage-open" onclick="openUsageModal()">Usage</button>
+      <button class="top-btn" id="memory-export" onclick="exportMemory()">Export memory</button>
+      <button class="top-btn" id="profile-export" onclick="exportProfile()">Export profile</button>
+    </div>
+  </header>
+
+  <!-- Key modal -->
+  <div class="modal-backdrop" id="key-modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Manage API key">
+      <div class="modal-h">
+        <div class="modal-title" id="key-modal-title">Manage API key</div>
+        <button class="modal-x" onclick="closeKeyModal()">✕</button>
+      </div>
+      <div class="modal-b">
+        <div class="field-label" id="key-modal-field-label">OpenRouter API Key （Both models will use this key.）</div>
+        <input id="router-key" class="field" type="password" autocomplete="off" spellcheck="false" placeholder="sk-or-..." />
+        <div class="modal-actions">
+          <button class="pill" onclick="closeKeyModal()">Cancel</button>
+          <button class="pill primary" onclick="saveKey()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage modal -->
+  <div class="modal-backdrop" id="usage-modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Token usage">
+      <div class="modal-h">
+        <div class="modal-title" id="usage-modal-title">Token usage (per prompt+debate)</div>
+        <button class="modal-x" onclick="closeUsageModal()">✕</button>
+      </div>
+      <div class="modal-b">
+        <div class="usage-list" id="usage-list"></div>
+        <div id="usage-modal-note" style="margin-top:10px;font-size:11px;color:var(--color-text-tertiary);line-height:1.5;">
+          Tokens are aggregated from OpenRouter streaming `usage` when available.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- First-visit demo video (place your recording at ./assets/demo.mov) -->
+  <div class="modal-backdrop welcome-demo-backdrop" id="welcome-demo-modal" aria-hidden="true">
+    <div class="modal welcome-demo-modal" role="dialog" aria-modal="true" aria-label="Demo">
+      <div class="modal-h">
+        <div class="modal-title">Demo</div>
+        <button type="button" class="modal-x" onclick="closeWelcomeDemo()" aria-label="Close demo">✕</button>
+      </div>
+      <div class="modal-b welcome-demo-body" style="padding:0;">
+        <div class="welcome-demo-video-wrap">
+          <video id="welcome-demo-video" class="welcome-demo-video" playsinline muted preload="metadata" poster="">
+            <source src="assets/demo.mov" type="video/quicktime">
+            <source src="assets/demo.mov" type="video/mp4">
+          </video>
+          <div id="welcome-demo-black" class="welcome-demo-black" aria-hidden="true"></div>
+        </div>
+        <div class="welcome-demo-note">
+          <strong>This is a demo only</strong> — it shows how duet works.<br/>
+          Try 4 built-in demo prompts — no tokens needed.<br/>
+          No API calls are made until you add your own OpenRouter key.
+        </div>
+        <div class="welcome-demo-actions">
+          <button type="button" class="welcome-demo-start" onclick="closeWelcomeDemo()">Start to use</button>
+          <label class="welcome-demo-nomore">
+            <input id="welcome-demo-no-more" type="checkbox"/>
+            <span>Show this no more</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="key-onboard" class="key-onboard" role="region" aria-label="API key setup">
+    <div class="key-onboard-text">
+      <strong style="display:block;margin-bottom:6px;color:var(--color-text-primary);">Bring your own key (BYOK)</strong>
+      This tool does not include API access. Paste your <strong>OpenRouter</strong> key below or in <em>Manage API key</em> — you pay your own usage; we never see your key on a server (it stays in your browser).
+      <div style="margin-top:10px;">
+        <strong>Get a key in one step:</strong> open
+        <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer">openrouter.ai/keys</a>,
+        create a key, copy it, then paste here →
+        <button type="button" class="pill primary" style="height:30px;padding:0 12px;font-size:12px;vertical-align:middle;margin-left:6px;" onclick="openKeyModal()">Paste API key</button>
+      </div>
+    </div>
+    <div class="key-onboard-actions">
+      <button type="button" class="key-onboard-dismiss" onclick="dismissKeyOnboard()" title="Dismiss">×</button>
+    </div>
+  </div>
+
+  <div class="main-work" id="main-work">
+    <div class="group-composer-panels">
+    <section class="composer-stack">
+      <div class="input-area">
+        <div class="input-wrap">
+          <div class="input-header">
+            <div class="input-title">Prompt</div>
+            <div class="input-focus">Type then Send</div>
+          </div>
+          <div class="composer-editor">
+            <textarea class="input-field" id="prompt-input" rows="1" placeholder="Ask anything — both will answer simultaneously…" onkeydown="handleKey(event)"></textarea>
+          </div>
+          <div class="composer-actions">
+            <button class="btn-send" id="send-btn" onclick="handleSend()" disabled>Send</button>
+            <button class="btn-stop" id="stop-btn" onclick="handleStop()">Stop</button>
+          </div>
+        <div class="demo-qs-row">
+          <div class="demo-qs-label">Try this:</div>
+          <div class="demo-qs" id="demo-qs" aria-label="Demo prompts"></div>
+        </div>
+          <div class="input-resize" id="input-resize"><div class="input-resize-grip"></div></div>
+        </div>
+        <div id="attachments" class="attachments-row"></div>
+        <p id="flow-status" class="flow-status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <div class="panels" id="panels">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="dot" id="gpt-dot" style="background:var(--color-border-secondary);"></div>
+          <span class="panel-label" style="color:#10a37f;">ChatGPT</span>
+          <select id="gpt-model" style="margin-left:6px;height:26px;border-radius:999px;border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:12px;font-weight:800;padding:0 10px;outline:none;">
+            <option value="openai/gpt-4o">gpt-4o</option>
+            <option value="openai/gpt-4.1-mini">gpt-4.1-mini</option>
+          </select>
+          <span style="font-size:12px;color:var(--color-text-tertiary);margin-left:auto;font-weight:800;">GPT</span>
+        </div>
+        <div class="panel-body" id="gpt-panel">
+          <div class="empty-state" id="gpt-empty">
+            <div class="empty-icon" style="color:#10a37f;">G</div>
+            <div class="empty-label">ChatGPT will respond here</div>
+          </div>
+          <div id="gpt-content" style="display:none;">
+            <div class="prompt-bubble" id="gpt-prompt"></div>
+            <div class="ai-response" id="gpt-text"></div>
+          </div>
+          <button class="copy-btn" id="gpt-copy" onclick="copyText('gpt')" title="Copy answer"></button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="dot" id="claude-dot" style="background:var(--color-border-secondary);"></div>
+          <span class="panel-label" style="color:#d97941;">Claude</span>
+          <select id="anthropic-model" style="margin-left:6px;height:26px;border-radius:999px;border:1px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:12px;font-weight:800;padding:0 10px;outline:none;">
+            <option value="anthropic/claude-3.5-sonnet">3.5 Sonnet</option>
+            <option value="anthropic/claude-3.5-haiku">3.5 Haiku</option>
+          </select>
+          <span style="font-size:12px;color:var(--color-text-tertiary);margin-left:auto;font-weight:800;">Claude</span>
+        </div>
+        <div class="panel-body" id="claude-panel">
+          <div class="empty-state" id="claude-empty">
+            <div class="empty-icon" style="color:#d97941;">C</div>
+            <div class="empty-label">Claude will respond here</div>
+          </div>
+          <div id="claude-content" style="display:none;">
+            <div class="prompt-bubble" id="claude-prompt"></div>
+            <div class="ai-response" id="claude-text"></div>
+          </div>
+          <button class="copy-btn" id="claude-copy" onclick="copyText('claude')" title="Copy answer"></button>
+        </div>
+      </div>
+    </div>
+    <div class="input-resize" id="panels-resize"><div class="input-resize-grip"></div></div>
+    </div>
+
+    <div class="group-debate-block">
+    <div class="debate-bar">
+      <div class="debate-bar-inner">
+        <div class="timer" id="timer-display" style="display:none;">2:00</div>
+        <button class="btn-debate btn-debate-full" id="debate-btn" onclick="handleDebate()" disabled>Debate to align</button>
+      </div>
+    </div>
+
+    <div class="debate-stack">
+      <div class="debate-zone-header">
+        <div class="debate-zone-title">
+          <div class="dot" id="debate-dot" style="background:var(--color-border-secondary);"></div>
+          <span id="debate-zone-title-text" style="color:var(--color-text-tertiary);">Group debate ·</span>
+          <span style="color:#10a37f;font-weight:500;">ChatGPT</span>
+          <span style="color:var(--color-text-tertiary);">×</span>
+          <span style="color:#d97941;font-weight:500;">Claude</span>
+        </div>
+      </div>
+      <div class="debate-body" id="debate-body">
+        <div class="empty-state" id="debate-empty" style="height:100%;">
+          <div id="debate-empty-text" class="empty-label mute-placeholder">After both answers load, use Debate to align above to start (you can run another round after each round finishes).</div>
+        </div>
+      </div>
+      <div class="debate-resize" id="debate-resize"><div class="debate-resize-grip"></div></div>
+      <div id="judging-strip" class="judging-strip" aria-live="polite" aria-busy="false">
+        <div class="final-aligning-inner">
+          <div class="aligning-ring-wrap">
+            <svg class="aligning-ring-svg" viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="aligning-ring-bg" cx="32" cy="32" r="28"/>
+              <circle class="aligning-ring-fg" id="aligning-ring-fg" cx="32" cy="32" r="28"/>
+            </svg>
+            <span class="aligning-ring-pct" id="aligning-ring-pct">0%</span>
+          </div>
+          <p class="aligning-copy" id="judging-strip-text">One moment, we are aligning on the final answer…</p>
+        </div>
+      </div>
+      <div id="align-row" class="align-row" style="display:none;">
+        <div id="align-row-label-text" class="align-label">We tried to align, and we got</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-fill"></div></div>
+        <div class="align-pct" id="align-pct">—</div>
+        <span id="align-row-alignment-word" style="font-size:12px;color:var(--color-text-tertiary);">alignment</span>
+      </div>
+      <div id="final-section" class="final-section" style="display:none;">
+        <div id="final-label-text" class="final-label">Aligned answer</div>
+        <div class="unified-text prose" id="final-text"></div>
+        <div class="divergence" id="divergence" style="display:none;"></div>
+        <button class="copy-btn-final" id="final-copy" onclick="copyText('final')" title="Copy aligned answer"></button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── icon SVGs (inline attrs so no CSS variable dependency) ───────────────────
+const COPY_ICON = `<svg width="18" height="18" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+  <rect x="4.5" y="4.5" width="8" height="8" rx="1.7" stroke="#374151" stroke-width="1.6"/>
+  <path d="M2 9.5V2.5A.5.5 0 0 1 2.5 2h7" stroke="#374151" stroke-width="1.6" stroke-linecap="round"/>
+</svg>`;
+const CHECK_ICON = `<svg width="18" height="18" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+  <path d="M2.5 7.5 L5.5 10.5 L11.5 4" stroke="#10a37f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+function initCopyBtns(){
+  ['gpt-copy','claude-copy','final-copy'].forEach(id=>{
+    const b=document.getElementById(id);
+    if(b) b.innerHTML=COPY_ICON;
+  });
+}
+initCopyBtns();
+
+// ── data ─────────────────────────────────────────────────────────────────────
+const MOCK_GPT=`The most effective approach is structured immersion — start with official documentation, build small projects immediately, and use spaced repetition for syntax.\n\nRecommended path:\n1. Complete the official tutorial or a short structured course (1–2 weeks)\n2. Build a small project you actually care about, right away\n3. Read excellent code written by others on GitHub\n4. Practice daily with bite-sized exercises (Exercism, small scripts)\n\nThe project-based approach accelerates retention because it creates meaningful context for abstract concepts. Syntax sticks when it solves a real problem you're facing.`;
+const MOCK_CLAUDE=`I'd prioritize understanding the language's mental model before rushing to build things. Every language has a philosophy — ignoring it means writing code that works but reads wrong.\n\nMy approach:\n1. Understand the language's design decisions and core idioms first\n2. Study the official style guide and community conventions\n3. Read excellent open-source projects in that language before writing much\n4. Only then build your own project — with a clear sense of what "good" looks like\n\nThe distinction matters: syntax can be acquired in days, but genuine judgment takes deliberate exposure to idiomatic patterns. Skipping this step creates habits that are hard to undo later.`;
+const DEBATE_MSGS=[
+  {role:'gpt',name:'ChatGPT',text:`Claude raises a fair point about idiomatic patterns. I'll acknowledge that rushing straight to projects without understanding the language's philosophy can embed bad habits early. My position is evolving: projects and pattern-study can run in parallel — early projects surface the exact questions that philosophy and idiom study then answers.`},
+  {role:'claude',name:'Claude',text:`That's a meaningful concession, and the parallel-track framing is more nuanced than I initially credited. I'll update my view: pure theory-before-practice isn't optimal either — it risks abstract procrastination. What I was really advocating for is intentional exposure to idiomatic code alongside building. Early projects are fine if paired with regular reading.`},
+  {role:'gpt',name:'ChatGPT',text:`We're converging well. A revised unified approach: brief philosophy overview first (days, not weeks), then parallel project-building and idiomatic code-reading. Projects surface the real questions; reading excellent code answers them. Don't let your writing get too far ahead of your reading fluency.`},
+  {role:'claude',name:'Claude',text:`Agreed. Final synthesis: structured mental-model overview → parallel project-building + idiomatic reading, with deliberate emphasis on reading before writing extensively. We've moved past the false dichotomy. I'm confident this integrated approach is the more complete answer.`},
+];
+const DEBATE_MSGS_R2=[
+  {role:'gpt',name:'ChatGPT',text:`Picking up from our last round: I'll add one practical guardrail — cap "reading" sessions to concrete repos or chapters so it doesn't become endless browsing. The parallel tracks stay, but each week should ship a small artifact.`},
+  {role:'claude',name:'Claude',text:`Good constraint. I'll mirror it on the build side: each project milestone should include a short "idiom review" — compare your new code to one reference file. That keeps reading and writing coupled without slowing momentum.`},
+  {role:'gpt',name:'ChatGPT',text:`Combined rule-set: (1) brief mental-model primer, (2) parallel build + reading with weekly artifacts, (3) bounded reading targets, (4) per-milestone idiom diff. That's implementable for self-learners and bootcamps alike.`},
+  {role:'claude',name:'Claude',text:`We're aligned. Closing position: integrated tracks with explicit anti-procrastination bounds on both sides. I'll treat this as the refined answer for the user's question.`},
+];
+const FINAL_HTML=`<strong>Unified approach to learning a new programming language:</strong><br><br>Start with a brief overview of the language's philosophy and mental model (days, not weeks). Then run two tracks in parallel:<br><br>&nbsp;· <strong>Build projects</strong> you care about — they surface real questions and sustain motivation<br>&nbsp;· <strong>Read idiomatic code</strong> — study excellent open-source projects and the official style guide<br><br>The key principle: don't let your writing get too far ahead of your reading fluency.`;
+/** Shown when judge returns 0 / bad JSON / missing answer — never use unrelated demo HTML. */
+function getAlignFailCalloutHtml(){
+  const strong=(typeof uiT==='function' ? uiT('alignFail.strong') : 'We failed to align,') || 'We failed to align,';
+  const rest=(typeof uiT==='function' ? uiT('alignFail.rest') : ' please check again with a third party.') || ' please check again with a third party.';
+  return '<div class="align-fail-callout"><strong>'+escHtml(strong)+'</strong>'+escHtml(rest)+'</div>';
+}
+const DIVERGENCE_HTML=`<strong>Remaining nuance:</strong> ChatGPT weights early project momentum more heavily; Claude weights code-reading literacy slightly more. Both agree these are complementary, not competing.`;
+
+let streamIntervals=[],timerInterval=null,debateRunning=false,bothDone=false,gptDone=false,claudeDone=false,timerVal=120;
+let gptAnswer='',claudeAnswer='';
+let activeAbort=null;
+// When user clicks the bundled demo chips, we don't want focus/keydown handlers
+// (which open API-key UI) to trigger during the demo playback.
+/** Full debate transcript across rounds (for judge). Last round's four messages = continuation context. */
+let fullDebateHistory=[];
+let lastDebateRound4=[];
+// Debate: exactly 4 messages G→C→G→C, then judge → aligned answer
+const DEBATE_MSG_ORDER=['gpt','claude','gpt','claude'];
+let promptImages=[]; // {mime,dataUrl}
+let lastPromptText='';
+let currentRunId=null;
+let currentRunTokens=0;
+/** { code, line, source } — refined after both panel answers for debate/panels consistency */
+let sessionOutputLang=null;
+
+function addUsageToCurrentRun(usage){
+  if(!usage) return;
+  const t = usage.total_tokens || ( (usage.prompt_tokens||0) + (usage.completion_tokens||0) ) || 0;
+  if(t){
+    currentRunTokens += t;
+    syncRunTokensToMemory();
+  }
+}
+
+function syncRunTokensToMemory(){
+  if(!currentRunId) return;
+  try{
+    const raw=localStorage.getItem(LS_MEMORY);
+    const arr=raw?JSON.parse(raw):[];
+    for(let i=arr.length-1;i>=0;i--){
+      if(arr[i] && arr[i].ts===currentRunId){
+        arr[i].tokens_total=currentRunTokens||0;
+        localStorage.setItem(LS_MEMORY,JSON.stringify(arr).slice(0,200000));
+        return;
+      }
+    }
+  }catch(_){}
+}
+
+const LS_ROUTER_KEY='synapse_openrouter_api_key';
+const LS_GPT_MODEL='synapse_gpt_model';
+const LS_ANTHROPIC_MODEL='synapse_anthropic_model';
+const LS_MEMORY='synapse_memory_log_v1';
+const LS_PANELS_H='synapse_panels_height';
+const LS_DEBATE_H='synapse_debate_height';
+const LS_INPUT_H='synapse_input_height';
+// If set, user asked to never show the welcome demo again ("Show this no more").
+const LS_WELCOME_DEMO_NO_MORE='duet_welcome_demo_no_more_v1';
+const LS_KEY_ONBOARD_DISMISSED='duet_key_onboard_dismissed_v1';
+
+function getRouterKey(){return (localStorage.getItem(LS_ROUTER_KEY)||'').trim();}
+function getOpenAIKey(){return getRouterKey();}
+function getAnthropicKey(){return getRouterKey();}
+function getGptModel(){
+  const v=(localStorage.getItem(LS_GPT_MODEL)||'').trim();
+  return v||'openai/gpt-4o';
+}
+function getAnthropicModel(){
+  const v=(localStorage.getItem(LS_ANTHROPIC_MODEL)||'').trim();
+  return v||'anthropic/claude-3.5-sonnet';
+}
+
+// ── unified output language (prompt + optional panel text + navigator fallback) ──
+function getNavigatorLangCode(){
+  try{
+    const raw=(navigator.language||navigator.userLanguage||'en').split('-')[0].toLowerCase();
+    const map={zh:'zh',en:'en',ja:'ja',ko:'ko',de:'de',fr:'fr',es:'es',pt:'pt',ru:'ru',ar:'ar',it:'it',nl:'nl',pl:'pl',tr:'tr',vi:'vi',id:'id',th:'th',hi:'hi'};
+    return map[raw]||'en';
+  }catch(_){ return 'en'; }
+}
+
+// ── UI i18n (system language -> page UI labels) ─────────────────────────────
+let uiLang='en';
+function escHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g,c=>{
+    const m={ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' };
+    return m[c]||c;
+  });
+}
+const UI_I18N={
+  en:{
+    slogan:'· debate to align',
+    header:{manageKey:'Manage API key',usage:'Usage',exportMemory:'Export memory',exportProfile:'Export profile'},
+    keyStatus:{ready:'Ready — key saved locally',preview:'Preview — no API key'},
+    keyModal:{title:'Manage API key',fieldLabel:'OpenRouter API Key （Both models will use this key.）',cancel:'Cancel',save:'Save'},
+    usageModal:{title:'Token usage (per prompt+debate)',note:'Tokens are aggregated from OpenRouter streaming `usage` when available.'},
+    prompt:{title:'Prompt',focus:'Type then Send',placeholder:'Ask anything — both will answer simultaneously…'},
+    buttons:{send:'Send',stop:'Stop',debate:'Debate to align'},
+    empty:{gpt:'ChatGPT will respond here',claude:'Claude will respond here',debate:'After both answers load, use Debate to align above to start (you can run another round after each round finishes).'},
+    debate:{groupTitle:'Group debate ·'},
+    align:{rowLabel:'We tried to align, and we got',word:'alignment'},
+    final:{label:'Aligned answer',remainingNuance:'Remaining nuance:'},
+    judging:{stripText:'One moment, we are aligning on the final answer…'},
+    flow:{stopped:'Stopped.',askingBoth:'Asking both simultaneously…',debateInProgress:'Debate in progress — silent observer mode…',computeFinal:'Computing final aligned answer…',debateFailed:'Debate failed — see error below.',debateFinishedFailed:'Debate finished — alignment could not be confirmed.',debateComplete:'Debate complete — {pct}% alignment reached.',debateMessage:'Debate message {i}/4 ({model})…'},
+    alignFail:{strong:'We failed to align,',rest:' please check again with a third party.'},
+  },
+  zh:{
+    slogan:'· 讨论以对齐',
+    header:{manageKey:'管理 API 密钥',usage:'用量',exportMemory:'导出记忆',exportProfile:'导出画像'},
+    keyStatus:{ready:'已就绪 — 密钥已本地保存',preview:'预览模式 — 尚未设置 API 密钥'},
+    keyModal:{title:'管理 API 密钥',fieldLabel:'OpenRouter API 密钥（共享）',cancel:'取消',save:'保存'},
+    usageModal:{title:'Token 用量（每次：提示词 + 辩论）',note:'当 OpenRouter 提供 `usage` 时，会对流式用量进行汇总。'},
+    prompt:{title:'提示词',focus:'输入后点击发送',placeholder:'随便问 — ChatGPT 与 Claude 会同时回答……'},
+    buttons:{send:'发送',stop:'停止',debate:'辩论以对齐'},
+    empty:{gpt:'ChatGPT 的回答会显示在这里',claude:'Claude 的回答会显示在这里',debate:'两边回答都出现后，点上方 “辩论以对齐” 开始；每轮结束后还可以继续再跑一轮。'},
+    debate:{groupTitle:'组内辩论 ·'},
+    align:{rowLabel:'我们尝试对齐，并达成了',word:'对齐度'},
+    final:{label:'对齐后的答案',remainingNuance:'剩余细微差异：'},
+    judging:{stripText:'稍等一下，我们正在对齐最终答案……'},
+    flow:{stopped:'已停止。',askingBoth:'正在同时询问两方……',debateInProgress:'辩论进行中 — 静默观察模式……',computeFinal:'正在计算最终对齐答案……',debateFailed:'辩论失败 — 请查看下方错误信息。',debateFinishedFailed:'辩论结束 — 无法确认对齐结果。',debateComplete:'辩论完成 — 对齐度 {pct}%，',debateMessage:'辩论消息 {i}/4（{model}）……'},
+    alignFail:{strong:'对齐失败，',rest:'请换第三方再核对。'},
+  },
+  es:{
+    slogan:'· debatir para alinearse',
+    header:{manageKey:'Gestionar clave API',usage:'Uso',exportMemory:'Exportar memoria',exportProfile:'Exportar perfil'},
+    keyStatus:{ready:'Listo — clave guardada localmente',preview:'Vista previa — sin clave API'},
+    keyModal:{title:'Gestionar clave API',fieldLabel:'Clave API de OpenRouter (compartida)',cancel:'Cancelar',save:'Guardar'},
+    usageModal:{title:'Uso de tokens (por prompt+debate)',note:'Los tokens se agregan del streaming `usage` de OpenRouter cuando está disponible.'},
+    prompt:{title:'Prompt',focus:'Escribe y luego envía',placeholder:'Pregúntame lo que sea — ambos responderán a la vez…'},
+    buttons:{send:'Enviar',stop:'Detener',debate:'Debate para alinearse'},
+    empty:{gpt:'La respuesta de ChatGPT aparecerá aquí',claude:'La respuesta de Claude aparecerá aquí',debate:'Cuando aparezcan ambas respuestas, usa el botón de arriba “Debate para alinearse” para empezar (puedes ejecutar otra ronda tras cada ronda).' },
+    debate:{groupTitle:'Debate en grupo ·'},
+    align:{rowLabel:'Intentamos alinearnos y obtuvimos',word:'alineación'},
+    final:{label:'Respuesta alineada',remainingNuance:'Matiz restante:'},
+    judging:{stripText:'Un momento… estamos alineando la respuesta final…'},
+    flow:{stopped:'Detenido.',askingBoth:'Preguntando a ambos a la vez…',debateInProgress:'Debate en progreso — modo observador silencioso…',computeFinal:'Calculando la respuesta final alineada…',debateFailed:'El debate falló — revisa el error abajo.',debateFinishedFailed:'Debate finalizado — no se pudo confirmar la alineación.',debateComplete:'Debate completado — alineación {pct}%',debateMessage:'Mensaje del debate {i}/4 ({model})…'},
+    alignFail:{strong:'No pudimos alinearnos,',rest:' revisa de nuevo con un tercero.'},
+  },
+  pt:{
+    slogan:'· debater para alinhar',
+    header:{manageKey:'Gerenciar chave de API',usage:'Uso',exportMemory:'Exportar memória',exportProfile:'Exportar perfil'},
+    keyStatus:{ready:'Pronto — chave salva localmente',preview:'Prévia — sem chave de API'},
+    keyModal:{title:'Gerenciar chave de API',fieldLabel:'Chave de API da OpenRouter (compartilhada)',cancel:'Cancelar',save:'Salvar'},
+    usageModal:{title:'Uso de tokens (por prompt+debate)',note:'Os tokens são agregados do streaming `usage` da OpenRouter quando disponível.'},
+    prompt:{title:'Prompt',focus:'Digite e depois envie',placeholder:'Pergunte qualquer coisa — ambos respondem ao mesmo tempo…'},
+    buttons:{send:'Enviar',stop:'Parar',debate:'Debate para alinhar'},
+    empty:{gpt:'A resposta do ChatGPT aparecerá aqui',claude:'A resposta do Claude aparecerá aqui',debate:'Quando as duas respostas aparecerem, use o botão acima “Debate para alinhar” para começar (você pode rodar outra rodada após cada uma).'},
+    debate:{groupTitle:'Debate em grupo ·'},
+    align:{rowLabel:'Tentamos alinhar e obtivemos',word:'alinhamento'},
+    final:{label:'Resposta alinhada',remainingNuance:'Nuance restante:'},
+    judging:{stripText:'Um instante… estamos alinhando a resposta final…'},
+    flow:{stopped:'Parado.',askingBoth:'Perguntando aos dois ao mesmo tempo…',debateInProgress:'Debate em andamento — modo observador silencioso…',computeFinal:'Calculando a resposta final alinhada…',debateFailed:'O debate falhou — veja o erro abaixo.',debateFinishedFailed:'Debate finalizado — não foi possível confirmar o alinhamento.',debateComplete:'Debate concluído — alinhamento {pct}%',debateMessage:'Mensagem do debate {i}/4 ({model})…'},
+    alignFail:{strong:'Não foi possível alinhar,',rest:' por favor, verifique novamente com um terceiro.'},
+  },
+  fr:{
+    slogan:'· débattre pour s’aligner',
+    header:{manageKey:'Gérer la clé API',usage:'Utilisation',exportMemory:'Exporter la mémoire',exportProfile:'Exporter le profil'},
+    keyStatus:{ready:'Prêt — clé enregistrée localement',preview:'Aperçu — aucune clé API'},
+    keyModal:{title:'Gérer la clé API',fieldLabel:'Clé API OpenRouter (partagée)',cancel:'Annuler',save:'Enregistrer'},
+    usageModal:{title:'Utilisation des tokens (par prompt+débat)',note:'Les tokens sont agrégés à partir du streaming `usage` d’OpenRouter lorsqu’il est disponible.'},
+    prompt:{title:'Prompt',focus:'Saisissez puis envoyez',placeholder:'Demandez n’importe quoi — les deux répondront en même temps…'},
+    buttons:{send:'Envoyer',stop:'Arrêter',debate:'Débat pour s’aligner'},
+    empty:{gpt:'La réponse de ChatGPT apparaîtra ici',claude:'La réponse de Claude apparaîtra ici',debate:'Une fois les deux réponses affichées, utilisez le bouton ci-dessus “Débat pour s’aligner” pour commencer (vous pouvez relancer une nouvelle ronde après chaque ronde).'},
+    debate:{groupTitle:'Débat de groupe ·'},
+    align:{rowLabel:'Nous avons tenté de nous aligner et nous avons obtenu',word:'alignement'},
+    final:{label:'Réponse alignée',remainingNuance:'Nuance restante :'},
+    judging:{stripText:'Un instant… nous alignons la réponse finale…'},
+    flow:{stopped:'Arrêté.',askingBoth:'En train de demander aux deux à la fois…',debateInProgress:'Débat en cours — mode observateur silencieux…',computeFinal:'Calcul de la réponse finale alignée…',debateFailed:'Le débat a échoué — voir l’erreur ci-dessous.',debateFinishedFailed:'Débat terminé — alignement non confirmé.',debateComplete:'Débat terminé — alignement {pct}%',debateMessage:'Message du débat {i}/4 ({model})…'},
+    alignFail:{strong:'Nous n’avons pas réussi à nous aligner,',rest:' veuillez revérifier avec un tiers.'},
+  },
+  de:{
+    slogan:'· debattieren zum Ausrichten',
+    header:{manageKey:'API-Schlüssel verwalten',usage:'Nutzung',exportMemory:'Speicher exportieren',exportProfile:'Profil exportieren'},
+    keyStatus:{ready:'Bereit — Schlüssel lokal gespeichert',preview:'Vorschau — kein API-Schlüssel'},
+    keyModal:{title:'API-Schlüssel verwalten',fieldLabel:'OpenRouter API-Schlüssel (geteilt)',cancel:'Abbrechen',save:'Speichern'},
+    usageModal:{title:'Token-Nutzung (pro Prompt+Debatte)',note:'Tokens werden aus dem OpenRouter-Streaming `usage` aggregiert, wenn verfügbar.'},
+    prompt:{title:'Prompt',focus:'Eingeben und dann senden',placeholder:'Frag einfach — beide antworten gleichzeitig…'},
+    buttons:{send:'Senden',stop:'Stoppen',debate:'Debatte zum Ausrichten'},
+    empty:{gpt:'Die Antwort von ChatGPT erscheint hier',claude:'Die Antwort von Claude erscheint hier',debate:'Wenn beide Antworten da sind, nutze die Leiste oben „Debatte zum Ausrichten“, um zu starten (du kannst nach jeder Runde erneut laufen lassen).'},
+    debate:{groupTitle:'Gruppendebatte ·'},
+    align:{rowLabel:'Wir haben versucht auszurichten und bekamen',word:'Ausrichtung'},
+    final:{label:'Ausrichtete Antwort',remainingNuance:'Verbleibende Nuance:'},
+    judging:{stripText:'Einen Moment… wir richten die finale Antwort aus…'},
+    flow:{stopped:'Gestoppt.',askingBoth:'Beide gleichzeitig fragen…',debateInProgress:'Debatte läuft — stiller Beobachtermodus…',computeFinal:'Finale, ausgerichtete Antwort wird berechnet…',debateFailed:'Debatte fehlgeschlagen — siehe Fehler unten.',debateFinishedFailed:'Debatte beendet — Ausrichtung konnte nicht bestätigt werden.',debateComplete:'Debatte abgeschlossen — Ausrichtung {pct}%',debateMessage:'Debattennachricht {i}/4 ({model})…'},
+    alignFail:{strong:'Wir konnten uns nicht ausrichten,',rest:' bitte prüfe noch einmal mit einer dritten Partei.'},
+  },
+  ja:{
+    slogan:'· 対話して整合させる',
+    header:{manageKey:'APIキーを管理',usage:'利用状況',exportMemory:'メモリをエクスポート',exportProfile:'プロフィールをエクスポート'},
+    keyStatus:{ready:'準備完了 — キーをローカル保存しました',preview:'プレビュー — APIキーがありません'},
+    keyModal:{title:'APIキーを管理',fieldLabel:'OpenRouter APIキー（共有）',cancel:'キャンセル',save:'保存'},
+    usageModal:{title:'トークン使用量（プロンプト＋ディベート）',note:'OpenRouter のストリーミング `usage` が利用可能な場合、合算します。'},
+    prompt:{title:'プロンプト',focus:'入力して送信',placeholder:'何でも聞いてください — ChatGPT と Claude は同時に回答します…'},
+    buttons:{send:'送信',stop:'停止',debate:'整合のためのディベート'},
+    empty:{gpt:'ChatGPT の回答がここに表示されます',claude:'Claude の回答がここに表示されます',debate:'両方の回答が表示されたら、上の「整合のためのディベート」を押して開始します（各ラウンドの後にさらに実行できます）。'},
+    debate:{groupTitle:'グループ・ディベート ·'},
+    align:{rowLabel:'整合を試みて、こうなりました',word:'整合度'},
+    final:{label:'整合した回答',remainingNuance:'残るニュアンス：'},
+    judging:{stripText:'少々お待ちください…最終回答を整合中です…'},
+    flow:{stopped:'停止しました。',askingBoth:'両者に同時に質問中…',debateInProgress:'ディベート中 — 静かなオブザーバーモード…',computeFinal:'最終の整合回答を計算中…',debateFailed:'ディベートに失敗しました — 下のエラーを確認してください。',debateFinishedFailed:'ディベート終了 — 整合を確認できませんでした。',debateComplete:'ディベート完了 — 整合度 {pct}%',debateMessage:'ディベートのメッセージ {i}/4（{model}）…'},
+    alignFail:{strong:'整合に失敗しました、',rest:'第三者ともう一度確認してください。'},
+  },
+  ko:{
+    slogan:'· 토론으로 정렬하기',
+    header:{manageKey:'API 키 관리',usage:'사용량',exportMemory:'메모리 내보내기',exportProfile:'프로필 내보내기'},
+    keyStatus:{ready:'준비됨 — 키를 로컬에 저장했습니다',preview:'미리보기 — API 키가 없습니다'},
+    keyModal:{title:'API 키 관리',fieldLabel:'OpenRouter API 키(공유)',cancel:'취소',save:'저장'},
+    usageModal:{title:'토큰 사용량(프롬프트+토론 기준)',note:'OpenRouter가 스트리밍 `usage`를 제공하는 경우, 이를 합산합니다.'},
+    prompt:{title:'프롬프트',focus:'입력 후 전송',placeholder:'무엇이든 물어보세요 — 두 모델이 동시에 답합니다…'},
+    buttons:{send:'전송',stop:'중지',debate:'정렬을 위한 토론'},
+    empty:{gpt:'ChatGPT의 답변이 여기에 표시됩니다',claude:'Claude의 답변이 여기에 표시됩니다',debate:'두 답변이 모두 나오면 위의 “정렬을 위한 토론”을 눌러 시작하세요(각 라운드가 끝난 뒤 다시 실행할 수 있어요).'},
+    debate:{groupTitle:'그룹 토론 ·'},
+    align:{rowLabel:'정렬을 시도해 결과는',word:'정렬도'},
+    final:{label:'정렬된 답변',remainingNuance:'남은 뉘앙스:'},
+    judging:{stripText:'잠시만요… 최종 답변을 정렬 중입니다…'},
+    flow:{stopped:'중지됨.',askingBoth:'두 모델에 동시에 질문 중…',debateInProgress:'토론 진행 중 — 조용한 관찰자 모드…',computeFinal:'최종 정렬 답변을 계산 중…',debateFailed:'토론 실패 — 아래 오류를 확인하세요.',debateFinishedFailed:'토론 종료 — 정렬을 확인할 수 없었습니다.',debateComplete:'토론 완료 — 정렬도 {pct}%',debateMessage:'토론 메시지 {i}/4({model})…'},
+    alignFail:{strong:'정렬에 실패했어요,',rest:'다른 제3자와 다시 확인해 주세요.'},
+  },
+  ru:{
+    slogan:'· дебаты для согласования',
+    header:{manageKey:'Управление API-ключом',usage:'Использование',exportMemory:'Экспорт памяти',exportProfile:'Экспорт профиля'},
+    keyStatus:{ready:'Готово — ключ сохранён локально',preview:'Предпросмотр — нет API-ключа'},
+    keyModal:{title:'Управление API-ключом',fieldLabel:'API-ключ OpenRouter (общий)',cancel:'Отмена',save:'Сохранить'},
+    usageModal:{title:'Использование токенов (на запрос+дебаты)',note:'Токены суммируются из потокового `usage` OpenRouter, если он доступен.'},
+    prompt:{title:'Запрос',focus:'Введите и отправьте',placeholder:'Спросите что угодно — оба ответят одновременно…'},
+    buttons:{send:'Отправить',stop:'Остановить',debate:'Дебаты для согласования'},
+    empty:{gpt:'Ответ ChatGPT появится здесь',claude:'Ответ Claude появится здесь',debate:'Когда появятся оба ответа, нажмите «Дебаты для согласования» сверху, чтобы начать (после каждой раунды можно запустить ещё раз).'},
+    debate:{groupTitle:'Групповые дебаты ·'},
+    align:{rowLabel:'Мы попытались согласовать, и получили',word:'согласование'},
+    final:{label:'Согласованный ответ',remainingNuance:'Остаточные нюансы:'},
+    judging:{stripText:'Пожалуйста, подождите… согласовываем финальный ответ…'},
+    flow:{stopped:'Остановлено.',askingBoth:'Спрашиваем обоих одновременно…',debateInProgress:'Дебаты в процессе — тихий режим наблюдателя…',computeFinal:'Вычисляем финальный согласованный ответ…',debateFailed:'Дебаты не удались — см. ошибку ниже.',debateFinishedFailed:'Дебаты завершены — согласование подтвердить не удалось.',debateComplete:'Дебаты завершены — согласование {pct}%',debateMessage:'Сообщение дебатов {i}/4 ({model})…'},
+    alignFail:{strong:'Нам не удалось согласовать,',rest:' пожалуйста, перепроверьте с третьей стороной.'},
+  },
+  ar:{
+    slogan:'· مناقشة من أجل التوافق',
+    header:{manageKey:'إدارة مفتاح API',usage:'الاستخدام',exportMemory:'تصدير الذاكرة',exportProfile:'تصدير الملف'},
+    keyStatus:{ready:'جاهز — تم حفظ المفتاح محلياً',preview:'معاينة — لا يوجد مفتاح API'},
+    keyModal:{title:'إدارة مفتاح API',fieldLabel:'مفتاح OpenRouter API (مشترك)',cancel:'إلغاء',save:'حفظ'},
+    usageModal:{title:'استخدام التوكنات (لكل من السؤال+المناقشة)',note:'يتم تجميع التوكنات من البث `usage` من OpenRouter عند توفره.'},
+    prompt:{title:'السؤال',focus:'اكتب ثم أرسل',placeholder:'اسأل أي شيء — سيجيب كلاهما في الوقت نفسه…'},
+    buttons:{send:'إرسال',stop:'إيقاف',debate:'مناقشة من أجل التوافق'},
+    empty:{gpt:'ستظهر إجابة ChatGPT هنا',claude:'ستظهر إجابة Claude هنا',debate:'عند ظهور كلا الإجابتين، استخدم شريط «مناقشة من أجل التوافق» بالأعلى للبدء (يمكنك تشغيل جولة أخرى بعد انتهاء كل جولة).'},
+    debate:{groupTitle:'مناقشة جماعية ·'},
+    align:{rowLabel:'حاولنا التوافق، والنتيجة هي',word:'مستوى التوافق'},
+    final:{label:'الإجابة المتوافقة',remainingNuance:'فروق متبقية:'},
+    judging:{stripText:'لحظة واحدة… نُوفِّق الإجابة النهائية…'},
+    flow:{stopped:'تم الإيقاف.',askingBoth:'نقوم بالسؤال لكليهما في نفس الوقت…',debateInProgress:'المناقشة جارية — وضع المراقب الصامت…',computeFinal:'حساب الإجابة النهائية المتوافقة…',debateFailed:'فشلت المناقشة — راجع الخطأ بالأسفل.',debateFinishedFailed:'تم إنهاء المناقشة — لم نتمكن من تأكيد التوافق.',debateComplete:'تمت المناقشة — التوافق {pct}%',debateMessage:'رسالة المناقشة {i}/4 ({model})…'},
+    alignFail:{strong:'تعذر علينا التوافق،',rest:' يُرجى إعادة التحقق مع طرف ثالث.'},
+  },
+  it:{
+    slogan:'· dibattere per allinearsi',
+    header:{manageKey:'Gestisci chiave API',usage:'Utilizzo',exportMemory:'Esporta memoria',exportProfile:'Esporta profilo'},
+    keyStatus:{ready:'Pronto — chiave salvata localmente',preview:'Anteprima — nessuna chiave API'},
+    keyModal:{title:'Gestisci chiave API',fieldLabel:'Chiave API OpenRouter (condivisa)',cancel:'Annulla',save:'Salva'},
+    usageModal:{title:'Uso dei token (per prompt+dibattito)',note:'I token vengono aggregati dallo streaming `usage` di OpenRouter quando disponibile.'},
+    prompt:{title:'Prompt',focus:'Scrivi e poi invia',placeholder:'Chiedi qualsiasi cosa — entrambi risponderanno insieme…'},
+    buttons:{send:'Invia',stop:'Stop',debate:'Dibattito per allinearsi'},
+    empty:{gpt:'La risposta di ChatGPT apparirà qui',claude:'La risposta di Claude apparirà qui',debate:'Dopo che compaiono entrambe le risposte, usa il pulsante sopra “Dibattito per allinearsi” per iniziare (puoi avviare un altro giro dopo ogni round).'},
+    debate:{groupTitle:'Dibattito di gruppo ·'},
+    align:{rowLabel:'Abbiamo provato ad allinearci e abbiamo ottenuto',word:'allineamento'},
+    final:{label:'Risposta allineata',remainingNuance:'Sfuma residua:'},
+    judging:{stripText:'Un attimo… stiamo allineando la risposta finale…'},
+    flow:{stopped:'Interrotto.',askingBoth:'Chiediamo a entrambi in parallelo…',debateInProgress:'Dibattito in corso — modalità osservatore silenzioso…',computeFinal:'Calcolo della risposta finale allineata…',debateFailed:'Il dibattito non è riuscito — vedi l’errore sotto.',debateFinishedFailed:'Dibattito terminato — impossibile confermare l’allineamento.',debateComplete:'Dibattito completato — allineamento {pct}%',debateMessage:'Messaggio del dibattito {i}/4 ({model})…'},
+    alignFail:{strong:'Non siamo riusciti ad allinearci,',rest:' per favore ricontrolla con una terza parte.'},
+  },
+  hi:{
+    slogan:'· समन्वय के लिए बहस',
+    header:{manageKey:'API कुंजी प्रबंधित करें',usage:'उपयोग',exportMemory:'मेमोरी निर्यात',exportProfile:'प्रोफ़ाइल निर्यात'},
+    keyStatus:{ready:'तैयार — कुंजी लोकल में सेव हो गई',preview:'प्रीव्यू — कोई API कुंजी नहीं'},
+    keyModal:{title:'API कुंजी प्रबंधित करें',fieldLabel:'OpenRouter API कुंजी (साझा)',cancel:'रद्द करें',save:'सेव करें'},
+    usageModal:{title:'टोकन उपयोग (प्रति prompt+debate)',note:'जब उपलब्ध होगा, OpenRouter के स्ट्रीमिंग `usage` से टोकन जोड़े जाते हैं।'},
+    prompt:{title:'प्रॉम्प्ट',focus:'लिखें फिर भेजें',placeholder:'कुछ भी पूछें — दोनों एक साथ जवाब देंगे…'},
+    buttons:{send:'भेजें',stop:'रोकें',debate:'समन्वय के लिए बहस'},
+    empty:{gpt:'ChatGPT का जवाब यहाँ दिखेगा',claude:'Claude का जवाब यहाँ दिखेगा',debate:'दोनों जवाब आने के बाद, ऊपर दिए “समन्वय के लिए बहस” पर क्लिक करें (हर राउंड के बाद आप एक और राउंड चला सकते हैं)।'},
+    debate:{groupTitle:'समूह बहस ·'},
+    align:{rowLabel:'हमने समन्वय की कोशिश की और मिला',word:'समन्वय'},
+    final:{label:'समन्वित उत्तर',remainingNuance:'बाकी सूक्ष्म अंतर:'},
+    judging:{stripText:'एक पल… हम अंतिम उत्तर को समन्वय कर रहे हैं…'},
+    flow:{stopped:'रुक गया।',askingBoth:'दोनों से एक साथ पूछ रहे हैं…',debateInProgress:'बहस चल रही है — शांत अवलोकन मोड…',computeFinal:'अंतिम समन्वित उत्तर की गणना…',debateFailed:'बहस विफल — नीचे त्रुटि देखें।',debateFinishedFailed:'बहस समाप्त — समन्वय की पुष्टि नहीं हो पाई।',debateComplete:'बहस पूरी — समन्वय {pct}%',debateMessage:'बहस संदेश {i}/4 ({model})…'},
+    alignFail:{strong:'हम समन्वय नहीं कर पाए,',rest:' कृपया तीसरे पक्ष के साथ फिर से जाँचें।'},
+  },
+};
+
+const DEMO_QUESTIONS={
+  en:[
+    'In such AI era of 2026, many human jobs can be replaced by AI agents. As human, what skill differentiate from AI agents, taking 6 months to learn but pays like a 4-year degree?',
+    'Did most Warren Buffett followers who copied him actually make money? Show me the prove and your advise.',
+    'Is a college degree still a good ROI in 2026? Why and what do you suggest?',
+    'In the past people said "Talk is cheap, show me the code", now with AI, it becomes "Code is cheap, show me the ____", what\'s the word to fill in, and why?'
+  ],
+  zh:[
+    '在 2026 年的 AI 时代，很多人类工作可能会被 AI 代理替代。作为人类，你的技能到底与 AI 代理有什么不同？需要 6 个月学会，但回报相当于 4 年学位那样——是什么技能？',
+    '模仿沃伦·巴菲特的追随者里，大多数人真的赚到钱了吗？给出证据，并说说你的建议。',
+    '到 2026 年，大学学位仍然有好的投资回报率吗？为什么？你建议什么？',
+    '过去人们说“空谈价廉，拿出代码”，而现在有了 AI，就变成“代码很便宜，拿出 ____ ”——这个空格填什么，为什么？'
+  ],
+  es:[
+    'En la era de la IA de 2026, muchos trabajos humanos pueden ser reemplazados por agentes de IA. Como humano, ¿qué habilidad te diferencia de esos agentes? Una habilidad que tarda 6 meses en aprender, pero paga como un título de 4 años.',
+    '¿La mayoría de los seguidores de Warren Buffett que lo copiaron realmente ganaron dinero? Muéstrame la prueba y tu recomendación.',
+    '¿En 2026, un título universitario sigue siendo una buena inversión? ¿Por qué y qué sugieres?',
+    'Antes se decía: “El discurso es barato; muéstrame el código”. Ahora, con la IA, es: “El código es barato; muéstrame el ____”. ¿Qué palabra falta y por qué?'
+  ],
+  pt:[
+    'No mundo da IA de 2026, muitos trabalhos humanos podem ser substituídos por agentes de IA. Como humano, que habilidade te diferencia desses agentes? Algo que leva 6 meses para aprender, mas rende como um diploma de 4 anos.',
+    'Quantos seguidores de Warren Buffett que o copiaram realmente ganharam dinheiro? Mostre as provas e dê seu conselho.',
+    'Em 2026, um diploma universitário ainda vale a pena em termos de ROI? Por quê e o que você sugere?',
+    'Antes diziam: “Falar é barato; mostre o código”. Agora, com IA, virou: “Código é barato; mostre o ____”. Que palavra preencher e por quê?'
+  ],
+  fr:[
+    'À l’ère de l’IA en 2026, de nombreux emplois humains peuvent être remplacés par des agents d’IA. En tant qu’humain, quelle compétence te distingue de ces agents ? Une compétence qui demande 6 mois à apprendre, mais qui rapporte comme un diplôme de 4 ans.',
+    'La plupart des disciples de Warren Buffett qui l’ont copié ont-ils vraiment gagné de l’argent ? Montre les preuves et donne ton avis.',
+    'Un diplôme universitaire est-il encore un bon investissement en 2026 ? Pourquoi, et que suggères-tu ?',
+    'Avant, on disait : « Le blabla est bon marché, montrez-moi le code ». Avec l’IA, on dit maintenant : « Le code est bon marché, montrez-moi le ____ ». Quelle est la réponse à remplir et pourquoi ?'
+  ],
+  de:[
+    'In der KI-Welt von 2026 können viele menschliche Jobs durch KI-Agenten ersetzt werden. Als Mensch: Welche Fähigkeit unterscheidet dich von KI-Agenten — eine Fähigkeit, die man in 6 Monaten lernt, aber die sich wie ein 4-jähriges Studium auszahlt?',
+    'Haben die meisten Nachfolger von Warren Buffett, die ihn kopiert haben, wirklich Geld verdient? Zeig mir die Beweise und gib mir deinen Rat.',
+    'Ist ein College-Abschluss 2026 immer noch eine gute Investition (ROI)? Warum, und was schlägst du vor?',
+    'Früher hieß es: „Reden ist billig, zeig mir den Code.“ Mit KI wird daraus: „Code ist billig, zeig mir den ____“. Welche Antwort soll ins Leerzeichen und warum?'
+  ],
+  ja:[
+    '2026年のAI時代では、多くの人の仕事はAIエージェントに置き換えられるかもしれません。人間として、AIエージェントと比べて決定的に違うのはどんなスキルですか？6か月で身につき、4年の学位と同等の見返りがあるのは何でしょう？',
+    'ウォーレン・バフェットを真似した人たちのうち、実際にほとんどがお金を稼げたのでしょうか？証拠を示して、あなたの意見も教えてください。',
+    '2026年でも大学の学位はROI（投資対効果）が高いですか？なぜ、あなたは何を提案しますか？',
+    '昔は「口先は安い、コードを見せてくれ」でした。AIの今は「コードは安い、____を見せてくれ」です。空欄には何が入るべきで、なぜですか？'
+  ],
+  ko:[
+    '2026년의 AI 시대에는 많은 인간의 일자리가 AI 에이전트로 대체될 수 있습니다. 인간인 우리는 AI 에이전트와 무엇이 다르며, 6개월 만에 익힐 수 있지만 4년 학위만큼의 가치를 내는 스킬은 무엇일까요?',
+    '버핏을 따라 한 대부분의 사람들이 실제로 돈을 벌었을까요? 증거를 보여주고 당신의 조언도 해주세요.',
+    '2026년에도 대학 학위는 여전히 좋은 ROI인가요? 왜 그런지, 무엇을 추천하나요?',
+    '예전에는 “말은 싸다. 코드로 보여줘”였는데, AI 시대에는 “코드는 싸다. ____를 보여줘”가 됐습니다. 빈칸에는 어떤 말이 들어가야 하고, 그 이유는 무엇인가요?'
+  ],
+  ru:[
+    'В эпоху ИИ в 2026 году многие человеческие профессии могут быть заменены AI-агентами. Как человеку, какая способность отличает тебя от AI-агентов: чему можно научиться за 6 месяцев, но выгода будет как от диплома на 4 года?',
+    'Большинство последователей Уоррена Баффета, которые копировали его, действительно заработали деньги? Покажи доказательства и дай свой совет.',
+    'В 2026 году диплом колледжа всё ещё даёт хорошую окупаемость? Почему и что ты предлагаешь?',
+    'Раньше говорили: «Болтовня дешева — покажи код». Теперь, с ИИ, это стало: «Код дешёв — покажи ____». Какое слово нужно вставить и почему?'
+  ],
+  ar:[
+    'في عصر الذكاء الاصطناعي عام 2026، يمكن استبدال العديد من الوظائف البشرية بعملاء ذكاء اصطناعي. كإنسان، ما المهارة التي تميّزك عن هؤلاء العملاء — مهارة تُتعلّم خلال 6 أشهر لكن عائدها مثل شهادة مدتها 4 سنوات؟',
+    'هل أغلب أتباع وارن بافيت الذين نسخوه حقاً حققوا أرباحاً؟ أَرِني الدليل ونصيحتك.',
+    'هل ما زالت الشهادة الجامعية استثماراً جيداً في عام 2026؟ لماذا، وماذا تقترح؟',
+    'في الماضي كان الناس يقولون: «الكلام رخيص، أرِني الكود». الآن مع الذكاء الاصطناعي تصبح: «الكود رخيص، أرِني ____». ما الكلمة التي تملأ الفراغ ولماذا؟'
+  ],
+  it:[
+    'Nell’era dell’IA del 2026, molti lavori umani possono essere sostituiti da agenti di IA. Come umano, quale abilità ti distingue dagli agenti di IA: un’abilità che richiede 6 mesi per imparare, ma ripaga come una laurea di 4 anni?',
+    'Quanti seguaci di Warren Buffett che lo hanno copiato hanno davvero guadagnato soldi? Mostrami le prove e il tuo consiglio.',
+    'Nel 2026, una laurea universitaria è ancora un buon ROI? Perché e cosa suggerisci?',
+    'In passato si diceva: “Il discorso è economico, mostrami il codice”. Ora, con l’IA, diventa: “Il codice è economico, mostrami il ____”. Qual è la parola da inserire e perché?'
+  ],
+  hi:[
+    '2026 के AI युग में, कई मानव नौकरियाँ AI एजेंट्स से बदली जा सकती हैं। इंसान के तौर पर, कौन-सी ऐसी स्किल है जो आपको AI एजेंट्स से अलग करती है—जो 6 महीने में सीखने योग्य हो, लेकिन 4 साल की डिग्री जैसी कमाई दे? वह स्किल क्या है?',
+    'क्या Warren Buffett को कॉपी करने वाले ज़्यादातर अनुयायियों ने सच में पैसा कमाया? सबूत दिखाइए और अपनी सलाह दीजिए।',
+    'क्या 2026 में कॉलेज डिग्री अभी भी अच्छा ROI है? क्यों, और आप क्या सुझाव देते हैं?',
+    'पहले लोग कहते थे, “बातें सस्ती हैं; कोड दिखाओ।” अब AI के साथ यह बन गया है: “कोड सस्ता है; ____ दिखाओ।” खाली जगह में क्या शब्द भरेंगे, और क्यों?'
+  ],
+};
+
+// Offline preview (no API key): sample 1 static content (source of truth: md file)
+const DEMO1_MD_URL='assets/Demo question 1 static content.md';
+// Fallback (embedded) so it still works if fetch is blocked (e.g., file://).
+const DEMO1_MD_FALLBACK=`**Prompt:**
+
+In such AI era of 2026, many human jobs can be replaced by AI agents. As human, what skill differentiate from AI agents, taking 6 months to learn but pays like a 4-year degree? 
+
+
+**Chatgpt answer: **
+
+In an AI-driven world, focusing on skills that emphasize human emotional intelligence, creativity, and complex problem-solving can make you stand out. Here are a few skills you might consider:
+
+
+1. Emotional Intelligence and Negotiation: The ability to understand, manage, and express emotions effectively, as well as navigate complex interpersonal dynamics, is something AI currently struggles with. This skill can be valuable in roles involving leadership, sales, and conflict resolution.
+
+
+2. Advanced Critical Thinking and Complex Decision-Making: Developing the ability to think critically and make nuanced decisions where ethical considerations and human values come into play. This is crucial for roles in policy-making, consulting, and executive management.
+
+
+3. Creative Development and Artistic Skills: Although AI can generate content, the deeply human process of creating art, music, writing, and innovative product designs that resonate emotionally with people can be a differentiator.
+
+
+4. Human-Centered Design and UX: Understanding human experiences and creating products and services that enhance user satisfaction requires empathy and a deep understanding of behavior and culture.
+
+
+5. Strategic Visioning: The ability to envision future opportunities and strategize towards achieving long-term goals, especially in ambiguous and rapidly changing environments, is highly valuable.
+
+
+6. Cross-Cultural Competence and Language Skills: While AI can translate languages, understanding cultural nuances and effectively communicating across different cultures is something AI may not fully replicate.
+
+
+Investing time in developing these skills can provide a significant advantage in the job market, where human touch and insight are crucial. While learning these skills may require dedication, resources such as online courses, workshops, and mentoring can accelerate your development path.
+
+
+**Claude answer:**
+
+In 2026 (though we're not quite there yet), here are valuable human-centric skills that AI currently struggles to replicate, can be learned in 6 months, and offer high earning potential:
+
+
+1. Sales Leadership & Relationship Building
+
+\- AI can't build genuine trust and emotional connections
+
+\- Focus on complex B2B sales and strategic partnerships
+
+\- Can earn $80K-150K+ with commission
+
+
+2. Change Management & Organizational Psychology
+
+\- Helping companies transition through AI adoption
+
+\- Managing human emotions and resistance
+
+\- Typical earnings: $90K-130K
+
+
+3. AI-Human Collaboration Strategy
+
+\- Bridge between AI systems and human teams
+
+\- Optimize workflows combining both strengths
+
+\- Earnings potential: $100K-140K
+
+
+4. Crisis Communication & Negotiation
+
+\- High-stakes situations requiring emotional intelligence
+
+\- Complex problem-solving with multiple stakeholders
+
+\- Can earn $85K-125K
+
+
+5. Creative Problem Solving & Innovation Facilitation
+
+\- Leading design thinking workshops
+
+\- Facilitating creative solutions across teams
+
+\- Potential earnings: $90K-130K
+
+
+Key advantages of these skills:
+
+\- Require human empathy
+
+\- Can't be easily automated
+
+\- High demand in AI transition
+
+\- Focus on soft skills + technical understanding
+
+\- Certification programs available
+
+\- Strong ROI for time invested
+
+
+Best approach:
+
+1. Choose one area
+
+2. Get certified
+
+3. Build portfolio through freelance work
+
+4. Network in industry
+
+5. Land full-time position
+
+
+**Debate content:**
+
+ChatGPT
+
+Both responses agree that skills emphasizing emotional intelligence and complex interpersonal dynamics are crucial differentiators from AI agents. However, there's a key disagreement: while I emphasize soft skills like creativity and human-centered design, Claude highlights structured roles like AI-human collaboration strategy and change management as the most promising. Claude could partially concede by acknowledging that incorporating creative skills, alongside structured roles, could broaden a candidate’s appeal, especially since creativity fuels innovation even within strategic frameworks.
+
+
+
+Claude
+
+I appreciate ChatGPT's focus on creativity, but would refine it: specifically, "creative facilitation" - helping teams navigate AI integration - could be our bridge skill. This role combines both structured change management and human-centered innovation. It's learnable through focused certificates/workshops in 6 months, yet commands premium salaries as organizations struggle with AI adoption. This targeted synthesis could satisfy both our perspectives on human differentiation.
+
+
+
+ChatGPT
+
+I agree with Claude's suggestion to focus on "creative facilitation" as a bridging skill, which combines structured AI-human collaboration strategies with creativity and human-centered innovation. This approach effectively merges structured change management with the need for creative input, positioning it as a highly valuable and marketable expertise. The synthesis acknowledges the importance of emotional intelligence and creativity while leveraging the demand for strategic guidance during AI adoption, which aligns with both our views. This combined focus ensures a well-rounded approach that can realistically be achieved in a 6-month learning period and provides lucrative career opportunities.
+
+
+
+Claude
+
+I confirm our aligned recommendation: Focus on creative facilitation and AI-human collaboration strategy, learnable in 6 months through targeted certificates. This role combines structured change management with human-centered innovation, leveraging both emotional intelligence and strategic frameworks. We agree this skillset commands premium compensation due to high organizational demand during AI adoption. (Remaining nuance: optimal balance between structured versus organic approaches to facilitation.)
+
+
+**85% alignment**
+
+
+**Aligned answer:**
+
+In the AI era of 2026, distinguishing human skills from AI is critical to securing opportunities with lucrative compensation. Here are the skills you should consider focusing on, which can be acquired in about six months and offer salaries comparable to a 4-year degree:
+
+
+1. Creative Facilitation: This involves guiding teams through AI integrations by merging creativity with structured change management. Professionals in this field help navigate AI adoption, ensuring both the human touch and strategic innovation. They command high salaries, typically between $90K-130K, due to the vast demand during AI transitions.
+
+
+
+2. Emotional Intelligence and Negotiation: Mastery in managing emotions and navigating complex interpersonal dynamics positions you as a leader, especially in roles involving sales and conflict resolution. These jobs require subtle human nuance that AI cannot easily replicate.
+
+
+
+3. AI-Human Collaboration Strategy: As a bridge between AI systems and human workers, your role involves optimizing workflows and ensuring both AI and human resources are leveraged effectively. This skill is highly sought after, with earnings ranging from $100K-140K.
+
+
+
+4. Change Management & Organizational Psychology: Driving successful transformations as companies integrate AI requires empathy and a deep understanding of human behavior. This role involves managing both the psychological and logistical challenges faced during transitions.
+
+
+
+5. Crisis Communication & Negotiation: Situations demanding high emotional intelligence and complex problem-solving skills with multiple stakeholders are perfect for those skilled in crisis communication.
+
+
+
+6. Creative Development and Artistic Skills: Although AI can create content, the human capacity to produce emotionally resonant artworks and innovative designs remains unmatched. This skill highlights the profound human creative process.
+
+
+
+7. Human-Centered Design and UX: Focusing on developing products or services that enhance user satisfaction involves a deep understanding of human experiences, which AI has yet to fully encapsulate.
+
+
+
+8. Strategic Visioning: Envisioning and strategizing for future opportunities in uncertain environments is a skill in high demand.
+
+
+
+9. Cross-Cultural Competence and Language Skills: While AI translates languages, it doesn’t fully grasp cultural nuances; mastering this can be a competitive advantage.
+
+
+Best Strategies:
+
+\- Choose one area and seek targeted certifications or workshops.
+
+\- Build a portfolio through freelance work.
+
+\- Network within industry circles.
+
+\- Transition into full-time roles.
+
+
+Ultimately, these skill areas emphasize the irreplaceable human elements that AI is unlikely to replicate soon. Their combination not only ensures future career viability but also positions you to capitalize on high-paying job opportunities in the rapidly evolving work landscape of 2026.
+
+
+
+**Remaining nuance: **
+
+The remaining divergence primarily lies in the scope of the skills highlighted. ChatGPT emphasizes a broader approach with emotional intelligence and problem-solving, while Claude narrows it to more specific roles like strategic facilitation. However, both perspectives agree on the value of leadership, emotional intelligence, and the human flexibility to adapt to AI integration.`;
+
+let DEMO1_DATA=null;
+
+function cleanStaticMdText(s){
+  return String(s||'')
+    .replace(/\r\n/g,'\n')
+    .replace(/\\-/g,'-')
+    .replace(/\s+\n/g,'\n')
+    .trim();
+}
+
+function parseDemo1Markdown(md){
+  const text=String(md||'').replace(/\r\n/g,'\n');
+  const lines=text.split('\n');
+  const sections={};
+  let cur=null;
+  let buf=[];
+  let headerPct=null;
+  const flush=()=>{
+    if(cur){
+      sections[cur]=buf.join('\n');
+    }
+    buf=[];
+  };
+  for(const raw of lines){
+    const line=raw;
+    const t=line.trim();
+    if(t==='**Prompt:**'){ flush(); cur='prompt'; continue; }
+    if(t.startsWith('**Chatgpt answer')){ flush(); cur='gpt'; continue; }
+    if(t.startsWith('**Claude answer')){ flush(); cur='claude'; continue; }
+    if(t.startsWith('**Debate content')){ flush(); cur='debate'; continue; }
+    // Demo alignment header may be 84%/85%/88% etc.
+    if(/^\*\*\s*\d+\s*%\s*alignment/i.test(t)){
+      const am=t.match(/^\*\*\s*(\d+)\s*%\s*alignment/i);
+      if(am && am[1]) headerPct=parseInt(am[1],10);
+      flush(); cur='pct'; continue;
+    }
+    if(t.startsWith('**Aligned answer')){ flush(); cur='final'; continue; }
+    if(t.startsWith('**Remaining nuance')){ flush(); cur='divergence'; continue; }
+    if(cur) buf.push(line);
+  }
+  flush();
+
+  const prompt=cleanStaticMdText(sections.prompt||DEMO_QUESTIONS.en[0]);
+  const gptText=cleanStaticMdText(sections.gpt||'');
+  const claudeText=cleanStaticMdText(sections.claude||'');
+  const debateText=cleanStaticMdText(sections.debate||'');
+  const finalText=cleanStaticMdText(sections.final||'');
+  const divergenceText=cleanStaticMdText(sections.divergence||'');
+
+  // Parse 4 debate turns: ChatGPT → Claude → ChatGPT → Claude.
+  const debateLines=debateText.split('\n');
+  const msgs=[];
+  let i=0;
+  while(i<debateLines.length){
+    const t=(debateLines[i]||'').trim();
+    if(t==='ChatGPT' || t==='Claude'){
+      const name=t;
+      const role=t==='ChatGPT'?'gpt':'claude';
+      i++;
+      const msgBuf=[];
+      while(i<debateLines.length){
+        const nextT=(debateLines[i]||'').trim();
+        if(nextT==='ChatGPT' || nextT==='Claude') break;
+        msgBuf.push(debateLines[i]);
+        i++;
+      }
+      msgs.push({role,name,text:cleanStaticMdText(msgBuf.join('\n'))});
+    }else{
+      i++;
+    }
+  }
+
+  // Divergence HTML uses existing UI styling.
+  const divergenceHtml='<strong>Remaining nuance:</strong> '+divergenceText;
+
+  let pct=headerPct!=null?headerPct:85;
+
+  return {
+    prompt,
+    gptText,
+    claudeText,
+    debateMsgs: msgs.slice(0,4),
+    alignmentPct: pct,
+    finalText,
+    divergenceHtml
+  };
+}
+
+async function ensureDemo1Data(){
+  if(DEMO1_DATA) return DEMO1_DATA;
+  let md=DEMO1_MD_FALLBACK;
+  try{
+    const res=await fetch(DEMO1_MD_URL,{cache:'no-store'});
+    if(res && res.ok){
+      md=await res.text();
+    }
+  }catch(_){
+    // fetch may fail under file:// — we keep fallback
+  }
+  DEMO1_DATA=parseDemo1Markdown(md);
+  return DEMO1_DATA;
+}
+
+// Demo #2 static (no tokens) — source of truth: md file.
+const DEMO2_MD_URL='assets/demo_question_2_static_content.md';
+const DEMO2_MD_FALLBACK=`**Prompt:**
+
+Did most Warren Buffett followers who copied him actually make money? Show me the prove and your advise.
+
+
+**Chatgpt answer:**
+
+Warren Buffett, known as the "Oracle of Omaha," is revered for his successful investment strategies. Many investors admire Buffett and attempt to emulate his style, yet results can vary widely. Here's what you need to know about following Buffett's investment approach:
+
+Evidence
+
+1. Success Stories: Some investors have had notable success by mimicking Buffett's strategies, which primarily focus on value investing, buy-and-hold principles, and investing in businesses with strong fundamentals. Historical data shows that following his lead, particularly during periods when he has outperformed the market, has been profitable for some.
+
+2. Challenges: However, it's essential to consider that Buffett's strategies are based on his deep understanding of businesses and financial markets, cultivated over decades. Copying his moves without this expertise can lead to mixed results. Factors such as timing, the scale of investment, and differences in risk tolerance can affect outcomes.
+
+3. SPY vs. Berkshire Hathaway: Some investors choose to invest directly in Berkshire Hathaway (Buffett's company) as a proxy for following his approach. Historically, Berkshire Hathaway has outperformed the S&P 500 over the long term, but past performance doesn't guarantee future results.
+
+Advice
+
+1. Educate Yourself: Understand the principles of value investing, including company analysis and market evaluation. Buffett is renowned for his patience and thoroughness.
+
+2. Long-term Focus: Buffett's strategy is notably long-term. If you decide to follow his style, be prepared to hold investments over several years, even decades.
+
+3. Diversity and Judgment: Diversify your investments and use your judgment. Buffett often invests in concentrated positions, but he has a deep understanding of those businesses.
+
+4. Risk Tolerance: Know your risk tolerance and financial goals. Buffett's approach might not align with everyone's appetite for risk or need for liquidity.
+
+While there are no guarantees in investing, employing Buffett's strategies wisely and with adequate research could potentially yield positive results. However, it's critical to adapt his principles to your circumstances rather than copying his actions blindly.
+
+
+**Claude answer:**
+
+The success rate of Buffett followers is actually quite mixed, and here's why:
+
+Evidence of Success:
+
+1. Todd Combs and Ted Weschler - Former Buffett proteges who successfully managed portions of Berkshire Hathaway's portfolio
+
+Evidence of Failure:
+
+1. Many retail investors fail to truly follow Buffett's principles:
+- They lack patience (Buffett holds stocks for decades)
+- They panic sell during downturns
+- They don't do thorough research like Buffett does
+- They try to time the market
+
+My advice:
+
+1. Understand that copying trades isn't enough:
+- Buffett has access to deals regular investors don't
+- He often gets preferred stock terms
+- He can buy entire companies
+
+2. Instead, focus on his principles:
+- Invest in what you understand
+- Look for companies with strong moats
+- Think long-term (10+ years)
+- Be fearful when others are greedy, and greedy when others are fearful
+- Focus on value, not market timing
+
+3. Build your own strategy:
+- Consider your own risk tolerance
+- Account for your investment timeline
+- Diversify appropriately
+- Don't invest money you can't afford to lose
+
+Remember: Even Buffett says most investors would be better off investing in low-cost index funds rather than trying to pick individual stocks.
+
+
+**Debate content:**
+
+ChatGPT
+
+Both responses agree that while some Warren Buffett followers have succeeded by emulating his strategies, results vary widely, and success is not guaranteed. The disagreement centers on the extent to which simply copying Buffett’s trades is effective. ChatGPT highlights the importance of understanding and adapting Buffett’s principles, while Claude emphasizes that direct copying is insufficient due to Buffett's unique advantages (e.g., access to special deals). Claude could partially concede by acknowledging that while copying Buffett's trades can be insufficient, understanding the rationale behind his decisions can be an essential step, thus shifting the focus from literal imitation to principle-based learning.
+
+
+Claude
+
+I agree with ChatGPT that understanding Buffett's principles is more valuable than blindly copying trades. However, research shows even institutional investors who closely tracked Berkshire's public positions (13F filings) significantly underperformed Buffett's returns - averaging only 5-7% annual gains versus his 20%+. This data suggests we should narrow our focus to teaching investors how to apply Buffett's core principles like margin of safety and circle of competence, rather than debating the merits of trade copying.
+
+
+ChatGPT
+
+We now both agree that success in replicating Warren Buffett's investment strategy relies more on understanding his core principles than on blindly mirroring his trades. Claude brought in a strong point with research showing that even institutional investors tracking Buffett's 13F filings underperformed compared to his success, which aligns with the view that direct replication is insufficient. Bridging our ideas, a concrete step would be to focus on educating investors about Buffett’s principles like margin of safety and a circle of competence, acknowledging both the limitations of direct copying and the value of strategic learning.
+
+
+Claude
+
+I concur with ChatGPT's synthesis that understanding Buffett's principles rather than copying trades is key, supported by clear empirical evidence of underperformance among followers. Our shared position is that investors should focus on learning and applying Buffett's fundamental investment philosophies - particularly margin of safety and staying within one's circle of competence - while recognizing that matching his exact returns is unrealistic. The only remaining nuance is the degree to which studying his specific trades can serve as useful case studies for learning these principles.
+
+
+**85% alignment**
+
+**Aligned answer:**
+
+Warren Buffett, often referred to as the 'Oracle of Omaha,' is widely followed by investors seeking to emulate his proven strategies. Evaluating whether most of his followers make money is complex because the outcomes vary significantly based on individual adherence to these strategies and market conditions.
+
+Evidence of Success and Challenges
+
+1. Success Stories: Some investors have achieved significant success by adopting Buffett's value investing approach, characterized by long-term holding of investments, focusing on businesses with strong fundamentals, and buying undervalued stocks. This method has historically led to profits for those who remain patient and disciplined. 2. Challenges and Evidence of Failure: Many retail investors struggle to replicate Buffett's success mainly due to differences in experience, resources, and psychological factors. The lack of thorough research, impatience, and reactionary selling during market downturns are common pitfalls. Additionally, even institutional investors focusing on publicly available information about Buffett's investments have underperformed compared to his overall returns, averaging gains far lower than his typical 20% annual returns.
+
+Advice for Investors
+
+1. Focus on Principles: Rather than attempting to copy Buffett's trade moves directly, it is crucial to understand his core investment principles. These include investing in businesses you understand, seeking companies with strong competitive advantages (moats), and maintaining a long-term investment horizon. 2. Education and Strategy: Intensely study value investing principles such as the margin of safety and circle of competence. Understanding Buffett's thinking process rather than just his actions can guide beneficial investment decisions. 3. The Role of Diversification and Risk Management: An investment plan that suits your risk tolerance and investment timeline. Diversify to spread risk and ensure you only invest money that you can afford to lose. 4. Patience and Market Behavior: Develop patience and a steady hand during market fluctuations. Embrace Buffett's advice to be fearful when others are greedy and greedy when others are fearful. This contrarian approach can foster opportunities amidst market uncertainty. 5. Consider Index Funds: Buffett himself has suggested that most investors may find more success by investing in low-cost index funds rather than attempting to pick individual stocks, given the complexity and time investment required to mimic his success.
+
+By focusing on learning and applying his fundamental philosophies, investors can enhance their understanding and potentially improve their investment outcomes, though matching Buffett's precise returns is unlikely for all but the most skilled and dedicated followers.
+
+
+**Remaining nuance:**
+
+One area of divergence remains regarding the potential educational value of analyzing Buffett's specific trades as case studies for understanding his principles. ChatGPT suggests broader learning from his strategies, whereas Claude notes studying individual trades might offer valuable insights for dedicated learners.`;
+
+let DEMO2_DATA=null;
+
+async function ensureDemo2Data(){
+  if(DEMO2_DATA) return DEMO2_DATA;
+  let md=DEMO2_MD_FALLBACK;
+  try{
+    const res=await fetch(DEMO2_MD_URL,{cache:'no-store'});
+    if(res && res.ok){
+      md=await res.text();
+    }
+  }catch(_){
+    // fetch may fail under file:// — we keep fallback
+  }
+  DEMO2_DATA=parseDemo1Markdown(md);
+  return DEMO2_DATA;
+}
+
+// Demo #3 static (no tokens) — source of truth: md file.
+const DEMO3_MD_URL='assets/demo_question_3_static_content.md';
+const DEMO3_MD_FALLBACK=`**Prompt:**
+
+Is a college degree still a good ROI in 2026? Why and what do you suggest?
+
+
+**Chatgpt answer:**
+
+The return on investment (ROI) of a college degree can vary widely depending on various factors, even as we look ahead to 2026. Here are some points to consider when evaluating whether a college degree is a good investment:
+
+1. Field of Study: Degrees in certain fields, like technology, healthcare, and engineering, tend to offer higher returns due to high demand for skilled labor and competitive salaries. Conversely, some fields may not offer as strong an ROI, depending on job opportunities and market saturation.
+2. Cost of Education: The cost of obtaining a degree, including tuition, fees, and living expenses, will significantly impact its ROI. It's important to consider how you plan to finance your education and the potential burden of student loans.
+3. Institution: The reputation and network of the educational institution can influence career prospects. Graduates from highly reputed colleges often have access to better job placement resources and alumni networks.
+4. Job Market Trends: The evolving job market, influenced by technology, globalization, and economic shifts, affects job availability and pay scales. It's wise to research trends and future projections in industries of interest to you.
+5. Alternative Paths: Consider emerging alternative education and career paths, such as vocational training, internships, bootcamps, and apprenticeship programs. These can sometimes offer more direct entry into certain industries without the time and financial investment of a traditional degree.
+6. Personal Goals: Align the decision with your long-term career aspirations and personal values. Some careers require a degree for entry regardless of the ROI, while others may prioritize skills and experience.
+
+Suggestions:
+
+Conduct thorough research about your field of interest, including job outlook, average salaries, and required qualifications.
+Consider the total costs of the degree and explore scholarships, grants, and financial aid options.
+Weigh alternatives such as community college or online degrees, which can offer significant cost savings.
+Stay adaptable and open to new learning opportunities, including online courses and certifications, to enhance your skills and employability.
+
+Ultimately, the decision should be based on a careful consideration of personal circumstances, career goals, and an analysis of the potential benefits relative to costs.
+
+**Claude answer:**
+
+A college degree's ROI in 2026 remains complex, but here's a balanced analysis:
+
+Pros:
+1. Higher lifetime earnings (still averages $1M+ more than high school graduates)
+2. Lower unemployment rates among degree holders
+3. Access to professional networks
+4. Development of transferable skills
+5. Better job security during economic downturns
+
+Cons:
+1. Rising tuition costs
+2. Increasing student debt
+3. Oversaturation in some fields
+4. Availability of alternative career paths
+5. Tech industry's growing acceptance of non-traditional credentials
+
+Suggestions:
+1. Be strategic:
+- Choose in-demand majors (STEM, healthcare, data analytics)
+- Consider cost vs. potential earnings
+- Research job market projections
+
+2. Consider alternatives:
+- Community college first
+- Trade schools
+- Coding bootcamps
+- Certification programs
+
+3. Maximize value:
+- Pursue internships
+- Build practical skills
+- Network actively
+- Consider public universities to minimize debt
+
+Bottom line: A degree can still be worth it, but it's no longer a guaranteed ticket to success. The key is choosing the right program and field while managing costs effectively. Consider your specific career goals and circumstances before committing.
+
+**Debate content:**
+
+ChatGPT
+
+Both responses agree that the ROI of a college degree in 2026 depends significantly on the chosen field of study. However, they differ on the emphasis placed on cost management strategies. While I highlighted considering alternatives like community colleges and online degrees to manage costs, Claude suggested maximizing value through internships and networking. Claude could partially concede by recognizing the role that lower-cost education pathways and flexible learning options can play in reducing financial burden while still gaining valuable skills.
+
+Claude
+
+I agree cost management is crucial, but I'd refine the focus: ROI optimization isn't just about finding cheaper options but maximizing career-relevant outcomes per dollar spent. Whether through community college or traditional university, the key metric should be how effectively each dollar invested translates into industry connections and practical skills. This bridges our views by acknowledging both cost reduction AND value creation matter in calculating true educational ROI.
+
+ChatGPT
+
+Agreed, maximizing ROI extends beyond just reducing costs to include both financial efficiency and strategic value creation. While Claude underscores focusing on generating career-relevant outcomes, it's essential to balance this with managing financial commitments through accessible education paths, such as online programs. Recognizing both is critical: strategic savings enable a focus on quality, ensuring that financial planning and educational outcomes work in tandem to optimize ROI in 2026. Let's recommend a personalized approach that evaluates program costs and practical opportunities like internships.
+
+Claude
+
+Building on our aligned focus on both cost management and value creation, we converge on this guidance: A college degree remains a worthwhile investment in 2026 when students strategically combine cost-efficient pathways (whether community college, online learning, or traditional university) with active pursuit of career-relevant experiences like internships and networking. The key is matching educational spending to concrete professional outcomes while minimizing debt burden. Success requires careful program selection and proactive career preparation - not just choosing the cheapest option or most prestigious name.
+
+**84% alignment**
+
+**Aligned answer:**
+
+As we look towards 2026, the return on investment (ROI) of a college degree continues to be a complex yet significant consideration for prospective students. Here are some key points and suggestions to guide this decision-making process:
+
+1. Field of Study: The ROI of a college degree heavily depends on the field of study. Degrees in STEM, healthcare, and technology often offer higher returns due to strong job opportunities and competitive salaries. On the other hand, fields with less demand might not provide as robust an ROI.
+2. Cost of Education: The financial aspect of attending college, which includes tuition and living expenses, plays a crucial role in determining ROI. Evaluating how you will finance your education, including scholarships and financial aid, is essential to reducing potential debt.
+3. Value Maximization: Beyond minimizing costs, maximize your ROI by gaining practical skills and industry connections. Consider pursuing internships, projects, and networking opportunities that enhance your profile and employment prospects.
+4. Alternative Education Paths: Explore other educational pathways such as community colleges, online degrees, trade schools, and certification programs. These options can provide substantial cost savings and flexible learning that cater to personal circumstances.
+5. Institutional Reputation and Network: The reputation and networking capabilities of the institution you choose can significantly impact your career opportunities. Alumni networks and career services at well-regarded institutions often provide better job placements.
+6. Job Market Trends: Keep an eye on evolving job market trends influenced by technological advances and economic shifts. Research future projections in industries of interest to understand job prospects.
+7. Personal Goals and Circumstances: Ultimately, aligning career choices with personal aspirations and evaluating both the financial and experiential aspects of education are vital. Assess how a degree aligns with long-term career goals and values.
+8. Career Preparation: Successful ROI also requires careful program selection and career preparation. The focus should be on education that aligns with future professional outcomes while managing the financial burden responsibly.
+
+In conclusion, while a college degree can still be a wise investment in 2026, it demands a strategic, personalized approach. Students should balance cost-effective education paths with opportunities for practical skill development, ensuring both financial efficiency and value creation in the process.
+
+**Remaining nuance:**
+
+ChatGPT tends to emphasize accessible, lower-cost paths such as online programs more than Claude, who focuses on maximizing value through strategic outcomes per educational dollar.
+`;
+
+let DEMO3_DATA=null;
+async function ensureDemo3Data(){
+  if(DEMO3_DATA) return DEMO3_DATA;
+  let md=DEMO3_MD_FALLBACK;
+  try{
+    const res=await fetch(DEMO3_MD_URL,{cache:'no-store'});
+    if(res && res.ok){
+      md=await res.text();
+    }
+  }catch(_){
+    // fetch may fail under file:// — we keep fallback
+  }
+  DEMO3_DATA=parseDemo1Markdown(md);
+  return DEMO3_DATA;
+}
+
+// Demo #4 static (no tokens) — source of truth: md file.
+const DEMO4_MD_URL='assets/demo_question_4_static_content.md';
+const DEMO4_MD_FALLBACK=`**Prompt:**
+
+In the past people said "Talk is cheap, show me the code", now with AI, it becomes "Code is cheap, show me the ____", what's the word to fill in, and why?
+
+
+**Chatgpt answer:**
+
+One possibility to fill in the blank is "'results'", as in "Code is cheap, show me the results". This reflects the idea that while generating code might be relatively easy now with the aid of AI, the real value lies in the outcomes or impact of that code—how effectively it solves problems, achieves goals, or creates value in a practical context. The emphasis shifts from simply producing code to delivering meaningful, tangible results that align with the intended purpose.
+
+**Claude answer:**
+
+The phrase now could be "Code is cheap, show me the value" or "Code is cheap, show me the impact."
+
+Here's why:
+1. In the AI era, generating code has become relatively easy - AI can write functional code in seconds
+2. What matters more now is:
+- Whether the code solves a real problem
+- The actual business/user value it creates
+- The impact it has on end-users
+- The thoughtful design and architecture decisions
+- How well it integrates into existing systems
+- Whether it addresses genuine user needs
+
+The original phrase "Talk is cheap, show me the code" emerged when writing code was the hard part. Now that AI can generate code quickly, the challenge has shifted to ensuring that what we build actually matters and creates meaningful value.
+
+So while code remains important, the emphasis is increasingly on demonstrating real-world impact and value rather than just the ability to write code.
+
+
+**Debate content:**
+
+ChatGPT
+
+Both first answers agree that with AI making code generation easier, the focus should shift to the outcomes or impact that the code achieves. However, while ChatGPT suggests using "results," Claude leans towards "value" or "impact," addressing more factors like business value and integration issues. Claude could partially concede by acknowledging that "results" inherently encompass value and impact, as effective results should ideally reflect both. Reframing it as “meaningful results” could highlight tangible outcomes while ensuring they hold real-world value.
+
+Claude
+
+I appreciate ChatGPT highlighting results as key, but I'd propose "value" as the most fitting word. While "results" captures technical output, "value" encompasses both the measurable outcomes and broader impact - like maintainability, business alignment, and real-world utility. We seem to agree the focus has shifted from code itself to its ultimate worth. Perhaps we can align on value being demonstrated through concrete results?
+
+
+ChatGPT
+
+I see merit in your emphasis on "value" and agree it indeed captures the broader impact that technology should have beyond just technical results. However, by using "meaningful results," we ensure that the output is not only aligned with business needs but is also practically demonstrable, integrating your broader view. By bridging both terms, we emphasize real-world utility and lasting worth. To finalize, proposing "show me the value through meaningful results" can synthesize both perspectives, focusing on outcome and relevance.
+
+
+Claude
+
+Building on our dialogue, we can jointly endorse "value" as the word that best completes "Code is cheap, show me the value." Both perspectives converge on the need to demonstrate real-world impact beyond mere code generation, with value encompassing both tangible results and broader utility. We agree this reflects the key shift in focus from code creation to meaningful outcomes, though the specific metrics of value may vary by context.
+
+**88% alignment**
+
+**Aligned answer:**
+
+In the era of AI, where generating code has become straightforward with the assistance of advanced technologies, the focus has shifted from merely producing code to demonstrating its actual usefulness and impact. A fitting phrase might be 'Code is cheap, show me the value,' or 'Code is cheap, show me the meaningful results.'
+
+The essence of this shift can be outlined as follows:
+1. Emphasizing Outcomes: As AI-generated code is readily available, it's imperative to focus on the results that are achieved through this code. Outcomes need to be tangible and align with business objectives or solve real-world problems.
+2. Creating Value: The true measure now lies in the value that the code brings. This may include business growth, customer satisfaction, and the code’s contribution toward solving actual problems or improving processes.
+3. Ensuring Impact: Beyond immediate results, the discussion shifts towards the lasting impact of the code - whether it integrates well into existing systems, is maintainable, and aligns with long-term strategic goals.
+4. Meaningful Integration: It's crucial that the generated solutions not only work technically but also fit seamlessly within business environments and address the specific needs of users. The underlying design and architecture decisions are significant.
+5. Broad Perspective: While results focus on what is delivered, value emphasizes the quality and relevance of these results in a broader business and societal context. Value represents enduring worth beyond functional code.
+6. Synthesis of Views: Combining 'value' and 'meaningful results' captures both immediate and extended expectations for AI-generated code. Resulting solutions should reflect business utility and have technological robustness.
+
+Thus, while ‘results’ underscore deliverables, 'value' ensures that these deliverables meet real-world requirements sustainably and meaningfully. The evolving technological landscape emphasizes outcomes that resonate beyond coding proficiency, emphasizing comprehensive impact.
+
+
+**Remaining nuance:**
+
+While both ChatGPT and Claude suggest integrating elements of value and results, ChatGPT emphasizes 'meaningful results' over generalized outcomes, suggesting a balanced approach focusing on demonstrable, intended impacts. Claude focalizes 'value' as capturing broader implications, more towards sustainability and longer-term utility beyond immediate results.
+`;
+
+let DEMO4_DATA=null;
+async function ensureDemo4Data(){
+  if(DEMO4_DATA) return DEMO4_DATA;
+  let md=DEMO4_MD_FALLBACK;
+  try{
+    const res=await fetch(DEMO4_MD_URL,{cache:'no-store'});
+    if(res && res.ok){
+      md=await res.text();
+    }
+  }catch(_){
+    // fetch may fail under file:// — we keep fallback
+  }
+  DEMO4_DATA=parseDemo1Markdown(md);
+  return DEMO4_DATA;
+}
+
+function getNoKeyDemoIndex(promptText){
+  const qs=DEMO_QUESTIONS.en||[];
+  return qs.indexOf(promptText);
+}
+
+function uiT(path){
+  const langPack=UI_I18N[uiLang]||UI_I18N.en;
+  const parts=path.split('.');
+  let cur=langPack;
+  for(const p of parts){
+    if(cur && Object.prototype.hasOwnProperty.call(cur,p)) cur=cur[p];
+    else return null;
+  }
+  return cur!=null?cur:UI_I18N.en;
+}
+
+function renderDemoQuestions(){
+  const box=document.getElementById('demo-qs');
+  if(!box) return;
+  box.innerHTML='';
+  const qs=(DEMO_QUESTIONS[uiLang]||DEMO_QUESTIONS.en)||[];
+  for(const q of qs){
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='demo-qs-btn';
+    b.disabled=false;
+    b.innerHTML='<span class="demo-qs-text">'+escHtml(q)+'</span>';
+    b.addEventListener('click',()=>{
+      const input=document.getElementById('prompt-input');
+      if(!input) return;
+      input.value=q;
+      input.dispatchEvent(new Event('input',{bubbles:true}));
+      input.focus();
+      updateSendButtonState();
+      if(!getRouterKey()){
+        const di=getNoKeyDemoIndex(q);
+        if(di>=0 && di<=3){
+          // Offline preview: populate the input, but do NOT auto-run.
+          // User needs to press Send to start the pre-baked demo content.
+          setFlowStatus('Demo #'+String(di+1)+' is ready. Press “Send” to start (static, no tokens).');
+          // Clear panels so the user sees a clean state before pressing Send.
+          const gptEmpty=document.getElementById('gpt-empty');
+          const claudeEmpty=document.getElementById('claude-empty');
+          const gptContent=document.getElementById('gpt-content');
+          const claudeContent=document.getElementById('claude-content');
+          if(gptEmpty) gptEmpty.style.display='flex';
+          if(claudeEmpty) claudeEmpty.style.display='flex';
+          if(gptContent) gptContent.style.display='none';
+          if(claudeContent) claudeContent.style.display='none';
+          const finalSection=document.getElementById('final-section');
+          if(finalSection) finalSection.style.display='none';
+          hideFinalAligningOverlay();
+          resetAlignmentVisualState();
+          const alignRow=document.getElementById('align-row');
+          if(alignRow) alignRow.style.display='none';
+          const barFill=document.getElementById('bar-fill');
+          if(barFill) barFill.style.width='0';
+          const alignPct=document.getElementById('align-pct');
+          if(alignPct) alignPct.textContent='—';
+          const debateBody=document.getElementById('debate-body');
+          if(debateBody){
+            debateBody.innerHTML='<div class="empty-state" id="debate-empty" style="height:100%;"><div class="empty-label mute-placeholder">'+escHtml(uiT("empty.debate"))+'</div></div>';
+          }
+          const debateBtn=document.getElementById('debate-btn');
+          if(debateBtn) debateBtn.classList.remove('active');
+          updateDebateButtonState();
+          updateSendButtonState();
+        }else{
+          // Offline preview: demos #1-#4 only. Others require your OpenRouter API key.
+          setFlowStatus('This sample needs your OpenRouter API key. Add it now to continue.');
+          openKeyGuide();
+          try{ openKeyModal(); }catch(_){}
+          // Clear panels to avoid "question/answer mismatch" confusion.
+          const gptEmpty=document.getElementById('gpt-empty');
+          const claudeEmpty=document.getElementById('claude-empty');
+          const gptContent=document.getElementById('gpt-content');
+          const claudeContent=document.getElementById('claude-content');
+          if(gptEmpty) gptEmpty.style.display='flex';
+          if(claudeEmpty) claudeEmpty.style.display='flex';
+          if(gptContent) gptContent.style.display='none';
+          if(claudeContent) claudeContent.style.display='none';
+          document.getElementById('final-section').style.display='none';
+          hideFinalAligningOverlay();
+          resetAlignmentVisualState();
+          document.getElementById('align-row').style.display='none';
+          document.getElementById('bar-fill').style.width='0';
+          document.getElementById('align-pct').textContent='—';
+          updateDebateButtonState();
+          updateSendButtonState();
+        }
+      }
+    });
+    box.appendChild(b);
+  }
+}
+
+function applyUILanguage(code){
+  const supported=Object.prototype.hasOwnProperty.call(UI_I18N,code);
+  uiLang=supported?code:'en';
+  const sloganEl=document.getElementById('slogan');
+  if(sloganEl) sloganEl.textContent=uiT('slogan')||sloganEl.textContent;
+  const manageBtn=document.getElementById('manage-key');
+  if(manageBtn) manageBtn.innerHTML='<span style="font-size:14px;line-height:1;">🔑</span> '+(uiT('header.manageKey')||'');
+  const usageBtn=document.getElementById('usage-open'); if(usageBtn) usageBtn.textContent=uiT('header.usage')||usageBtn.textContent;
+  const memBtn=document.getElementById('memory-export'); if(memBtn) memBtn.textContent=uiT('header.exportMemory')||memBtn.textContent;
+  const profBtn=document.getElementById('profile-export'); if(profBtn) profBtn.textContent=uiT('header.exportProfile')||profBtn.textContent;
+
+  const keyTitle=document.getElementById('key-modal-title'); if(keyTitle) keyTitle.textContent=uiT('keyModal.title');
+  const keyField=document.getElementById('key-modal-field-label'); if(keyField) keyField.textContent=uiT('keyModal.fieldLabel');
+  const cancelBtn=document.querySelector('#key-modal .modal-actions .pill:not(.primary)');
+  const saveBtn=document.querySelector('#key-modal .modal-actions .pill.primary');
+  if(cancelBtn) cancelBtn.textContent=uiT('keyModal.cancel');
+  if(saveBtn) saveBtn.textContent=uiT('keyModal.save');
+
+  const usageTitle=document.getElementById('usage-modal-title'); if(usageTitle) usageTitle.textContent=uiT('usageModal.title');
+  const usageNote=document.getElementById('usage-modal-note'); if(usageNote) usageNote.textContent=uiT('usageModal.note');
+
+  const promptTitle=document.querySelector('.input-title'); if(promptTitle) promptTitle.textContent=uiT('prompt.title');
+  const promptFocus=document.querySelector('.input-focus'); if(promptFocus) promptFocus.textContent=uiT('prompt.focus');
+  const ta=document.getElementById('prompt-input'); if(ta) ta.placeholder=uiT('prompt.placeholder');
+  const sendBtn=document.getElementById('send-btn'); if(sendBtn) sendBtn.textContent=uiT('buttons.send');
+  const stopBtn=document.getElementById('stop-btn'); if(stopBtn) stopBtn.textContent=uiT('buttons.stop');
+
+  const debateBtn=document.getElementById('debate-btn'); if(debateBtn) debateBtn.textContent=uiT('buttons.debate');
+  const gptEmptyLabel=document.querySelector('#gpt-empty .empty-label'); if(gptEmptyLabel) gptEmptyLabel.textContent=uiT('empty.gpt');
+  const claudeEmptyLabel=document.querySelector('#claude-empty .empty-label'); if(claudeEmptyLabel) claudeEmptyLabel.textContent=uiT('empty.claude');
+  const debateEmptyText=document.getElementById('debate-empty-text'); if(debateEmptyText) debateEmptyText.textContent=uiT('empty.debate');
+
+  const debateGroupTitle=document.getElementById('debate-zone-title-text'); if(debateGroupTitle) debateGroupTitle.textContent=uiT('debate.groupTitle');
+  const alignRowLabel=document.getElementById('align-row-label-text'); if(alignRowLabel) alignRowLabel.textContent=uiT('align.rowLabel');
+  const alignWord=document.getElementById('align-row-alignment-word'); if(alignWord) alignWord.textContent=uiT('align.word');
+  const finalLabel=document.getElementById('final-label-text'); if(finalLabel) finalLabel.textContent=uiT('final.label');
+
+  const judgingStripText=document.getElementById('judging-strip-text'); if(judgingStripText) judgingStripText.textContent=uiT('judging.stripText');
+
+  renderDemoQuestions();
+}
+
+// Page UI stays English. Only model outputs obey the user prompt language.
+uiLang='en';
+renderDemoQuestions();
+
+function getInstructionLineForCode(code){
+  const L={
+    zh:'Use Chinese for every visible word. Match Simplified vs Traditional to the user’s question when obvious.',
+    en:'Use English for every visible word. Match the user’s tone and formality.',
+    es:'Use Spanish for every visible word. Match the user’s regional style when obvious.',
+    de:'Use German for every visible word. Match the user’s tone and formality.',
+    ja:'Use Japanese for every visible word.',
+    ko:'Use Korean for every visible word.',
+    fr:'Use French for every visible word.',
+    pt:'Use Portuguese for every visible word.',
+    ru:'Use Russian for every visible word.',
+    ar:'Use Arabic for every visible word.',
+    it:'Use Italian for every visible word.',
+    hi:'Use Hindi for every visible word.'
+  };
+  const base=L[code]||L.en;
+  return base+' Do not switch to another language mid-answer unless the user explicitly asked for code-switching.';
+}
+
+function parseExplicitOutputLanguage(prompt){
+  const p=String(prompt||'');
+  if(!p.trim()) return null;
+  const toCode=(phrase)=>{
+    const s=String(phrase||'').trim().replace(/\.$/,'').toLowerCase();
+    if(!s) return null;
+    if(/chinese|mandarin|中文|简体|繁体/i.test(s)||/^[\u4e00-\u9fff]{1,6}$/.test(s)) return 'zh';
+    if(/^en$/i.test(s)||s==='eng'||/\benglish\b/i.test(s)) return 'en';
+    if(/^(spanish|español|espanol)$/i.test(s)) return 'es';
+    if(/^(french|français|francais)$/i.test(s)) return 'fr';
+    if(/^(german|deutsch)$/i.test(s)) return 'de';
+    if(/^(japanese|日本語|日语|日文)$/i.test(s)) return 'ja';
+    if(/^(korean|한국어|韩语|韩文)$/i.test(s)) return 'ko';
+    if(/^(portuguese|português|portugues)$/i.test(s)) return 'pt';
+    if(/^(russian|русский)$/i.test(s)) return 'ru';
+    if(/^(arabic|العربية)$/i.test(s)) return 'ar';
+    if(/^(italian|italiano)$/i.test(s)) return 'it';
+    if(/^(hindi|हिन्दी)$/i.test(s)) return 'hi';
+    if(/chinese|中文|mandarin/i.test(s)) return 'zh';
+    if(/spanish|español/i.test(s)) return 'es';
+    if(/portuguese|português/i.test(s)) return 'pt';
+    if(/japanese|日本/i.test(s)) return 'ja';
+    if(/korean|한국/i.test(s)) return 'ko';
+    return null;
+  };
+  const tries=[
+    /(?:please\s+)?(?:answer|respond|reply)\s+(?:only\s+|entirely\s+)?in\s+([A-Za-z\u4e00-\u9fff][A-Za-z\u4e00-\u9fff\s]{1,50})/i,
+    /\b(?:answer|respond|reply)\s+in\s+([A-Za-z\u4e00-\u9fff][A-Za-z\u4e00-\u9fff\s]{1,50})/i,
+    /\bin\s+(English|Chinese|Mandarin|Spanish|French|German|Japanese|Korean|Portuguese|Russian|Arabic|Italian|Hindi)\b/i,
+    /用\s*(中文|简体|繁体|英文|英语|日语|日文|韩语|韩文|法语|德语|西语|西班牙语|葡语|葡萄牙语|俄语|阿拉伯语|意大利语)\s*(?:回答|说明|输出|撰写|写)/,
+    /(?:答复|回答|请以|请用)\s*(英文|中文|英语|日语|韩语|法语|德语|西班牙语|葡萄牙语|俄语|阿拉伯语|意大利语)/,
+    /(?:language|语言)\s*[:：]\s*(English|Chinese|Spanish|French|German|Japanese|Korean|Portuguese|Russian|Arabic|Italian|中文|英文)/i
+  ];
+  for(const rx of tries){
+    const m=p.match(rx);
+    if(m&&m[1]){
+      const c=toCode(m[1]);
+      if(c) return c;
+    }
+  }
+  return null;
+}
+
+function detectScriptLang(text){
+  const s=String(text||'');
+  if(!s.trim()) return null;
+  if(/[\u3040-\u30ff]/.test(s)) return 'ja';
+  if(/[\uac00-\ud7af]/.test(s)) return 'ko';
+  if(/[\u0900-\u097F]/.test(s)) return 'hi';
+  if(/[\u4e00-\u9fff]/.test(s)) return 'zh';
+  if(/[\u0600-\u06FF]/.test(s)) return 'ar';
+  if(/[\u0400-\u04FF]/.test(s)) return 'ru';
+  return null;
+}
+
+function scoreLatinLanguages(text){
+  const low=String(text||'').toLowerCase();
+  const sc={en:0,es:0,pt:0,fr:0,de:0,it:0};
+  if(!low.trim()) return sc;
+  const enW=/\b(the|and|that|with|from|have|this|what|which|your|their|there|would|could|should|about|because|through|during|being|those|these|also|when|where|think|learn|programming|answer|question|please|thanks|anything|something|nothing|whether|however|actually|definitely|really|someone|everyone|another|understand|explain|compare|between|using|based|shouldn|couldn|wouldn|don|doesn|isn|wasn|haven|hasn|is|are|was|were|does|did|not|we|or|if|but|our|its|any|each|such|than|then|them|they|into|just|more|most|some|only|even|well|make|like|know|take|come|work|need|want|look|good|best|way|use|used|help|feel|seems|seem)\b/g;
+  sc.en+=(low.match(enW)||[]).length;
+  sc.en+=(low.match(/\b(i'm|i've|it's|we're|you're|they're|can't|won't|don't|doesn't|isn't|wasn't)\b/g)||[]).length;
+  sc.es+=(low.match(/[ñ¿¡]/g)||[]).length*4;
+  sc.es+=(low.match(/\b(qué|cómo|está|están|estás|usted|ustedes|también|porque|aquí|allí|señor|señora|señorita|años|días|número|usted)\b/g)||[]).length*2;
+  sc.pt+=(low.match(/\b(não|você|vocês|também|muito|nós|vamos)\b/g)||[]).length*3;
+  sc.fr+=(low.match(/[àâçéèêëîïôûùüÿœæ]/g)||[]).length*2;
+  sc.fr+=(low.match(/\b(vous|nous|être|était|étions|dans|avec|pour|comment|aussi|très|mais|cela|celui|dont|où)\b/g)||[]).length*2;
+  sc.de+=(low.match(/[äöüß]/g)||[]).length*4;
+  sc.de+=(low.match(/\b(ich|nicht|über|auch|noch|schon|können|müssen|würde|dass|gemacht|wurde|wird)\b/g)||[]).length;
+  sc.it+=(low.match(/\b(che|perché|questo|quello|dove|anche|molto|cosa|come|sono|essere|quando)\b/g)||[]).length*2;
+  return sc;
+}
+
+function argmaxLang(scores){
+  let best='en',v=-1;
+  for(const k of Object.keys(scores)){
+    if(scores[k]>v){v=scores[k];best=k;}
+  }
+  if(v<=0) return null;
+  return best;
+}
+
+/**
+ * Decide language for panel answers + debate: explicit instruction > script in prompt >
+ * confident prompt Latin scores > confident combined panel text > blended scores > navigator.
+ */
+function resolveUnifiedLang(prompt,answerA,answerB){
+  const promptStr=String(prompt||'').trim();
+  const combinedAnswers=String(answerA||'')+'\n'+String(answerB||'');
+  const explicit=parseExplicitOutputLanguage(promptStr);
+  if(explicit){
+    return {code:explicit,source:'explicit',line:getInstructionLineForCode(explicit)};
+  }
+  const scrP=detectScriptLang(promptStr);
+  if(scrP){
+    return {code:scrP,source:'prompt_script',line:getInstructionLineForCode(scrP)};
+  }
+  const PROMPT_MIN=5;
+  const ANSWER_MIN=4;
+  const sp=scoreLatinLanguages(promptStr);
+  const sa=scoreLatinLanguages(combinedAnswers);
+  const maxP=Math.max(sp.en,sp.es,sp.pt,sp.fr,sp.de,sp.it);
+  const maxA=Math.max(sa.en,sa.es,sa.pt,sa.fr,sa.de,sa.it);
+  if(maxP>=PROMPT_MIN){
+    return {code:argmaxLang(sp),source:'prompt_latin',line:getInstructionLineForCode(argmaxLang(sp))};
+  }
+  const scrA=detectScriptLang(combinedAnswers);
+  if(scrA&&combinedAnswers.trim().length>30){
+    return {code:scrA,source:'panel_script',line:getInstructionLineForCode(scrA)};
+  }
+  if(maxA>=ANSWER_MIN&&combinedAnswers.trim().length>40){
+    return {code:argmaxLang(sa),source:'panel_latin',line:getInstructionLineForCode(argmaxLang(sa))};
+  }
+  const blend={};
+  for(const k of Object.keys(sp)){
+    blend[k]=sp[k]+sa[k]*1.35;
+  }
+  const maxB=Math.max(blend.en,blend.es,blend.pt,blend.fr,blend.de,blend.it);
+  if(maxB>=2){
+    return {code:argmaxLang(blend),source:'blended',line:getInstructionLineForCode(argmaxLang(blend))};
+  }
+  const nav=getNavigatorLangCode();
+  return {code:nav,source:'navigator',line:getInstructionLineForCode(nav)};
+}
+
+function panelAnswerSystemMessage(pack){
+  const line=pack&&pack.line?pack.line:getInstructionLineForCode('en');
+  return 'You are a helpful assistant. '+line+' If the user explicitly asked for a specific output language in their message, that instruction overrides this line.';
+}
+
+function setKeyStatus(){
+  const ok=!!getRouterKey();
+  const el=document.getElementById('key-status');
+  if(!el) return;
+  if(ok) el.textContent=uiT('keyStatus.ready');
+  else el.textContent=uiT('keyStatus.preview');
+}
+
+// ── top-left brand interactions ───────────────────────────────────────────────
+(function initBrand(){
+  const b=document.getElementById('brand');
+  const s=document.getElementById('slogan');
+  if(s) requestAnimationFrame(()=>s.classList.add('show'));
+  if(b){
+    b.addEventListener('click',()=>location.reload());
+  }
+})();
+
+// ── key modal ────────────────────────────────────────────────────────────────
+function openKeyModal(){
+  const m=document.getElementById('key-modal');
+  const rk=document.getElementById('router-key');
+  if(rk) rk.value=getRouterKey();
+  if(m) m.classList.add('show');
+  if(rk) setTimeout(()=>rk.focus(),0);
+}
+function closeKeyModal(){
+  const m=document.getElementById('key-modal');
+  if(m) m.classList.remove('show');
+}
+function saveKey(){
+  const rk=document.getElementById('router-key');
+  const v=(rk&&rk.value?rk.value:'').trim();
+  localStorage.setItem(LS_ROUTER_KEY,v);
+  setKeyStatus();
+  syncKeyOnboardVisibility();
+  updateComposerKeyGate();
+  closeKeyModal();
+}
+
+function openKeyGuide(){
+  try{ localStorage.removeItem(LS_KEY_ONBOARD_DISMISSED); }catch(_){}
+  const el=document.getElementById('key-onboard');
+  if(el) el.classList.add('show');
+  try{ fitMainColumn(); }catch(_){}
+}
+function dismissKeyOnboard(){
+  const el=document.getElementById('key-onboard');
+  if(el) el.classList.remove('show');
+  try{ localStorage.setItem(LS_KEY_ONBOARD_DISMISSED,'1'); }catch(_){}
+  try{ fitMainColumn(); }catch(_){}
+}
+function syncKeyOnboardVisibility(){
+  const el=document.getElementById('key-onboard');
+  if(!el) return;
+  if(getRouterKey()){
+    el.classList.remove('show');
+    try{ fitMainColumn(); }catch(_){}
+    return;
+  }
+  if(localStorage.getItem(LS_KEY_ONBOARD_DISMISSED)==='1'){
+    el.classList.remove('show');
+    try{ fitMainColumn(); }catch(_){}
+    return;
+  }
+  el.classList.add('show');
+  try{ fitMainColumn(); }catch(_){}
+}
+function updateComposerKeyGate(){
+  const ta=document.getElementById('prompt-input');
+  if(!ta) return;
+  if(getRouterKey()){
+    ta.readOnly=false;
+    ta.classList.remove('input-locked');
+    const ph=uiT('prompt.placeholder');
+    if(ph) ta.placeholder=ph;
+  }else{
+    ta.readOnly=true;
+    ta.classList.add('input-locked');
+    ta.placeholder='Pick a “Try this” sample below (offline preview, no tokens). Add your OpenRouter key to type freely.';
+  }
+  updateSendButtonState();
+}
+
+function initWelcomeDemo(){
+  const bd=document.getElementById('welcome-demo-modal');
+  const v=document.getElementById('welcome-demo-video');
+  const black=document.getElementById('welcome-demo-black');
+  const urlForce = new URLSearchParams((location && location.search) ? location.search : '').get('showDemo')==='1';
+  if(!bd || !v) return;
+  // Some private-browsing modes may block localStorage. Never let that break the UI.
+  let noMore=false;
+  try{
+    noMore = localStorage.getItem(LS_WELCOME_DEMO_NO_MORE)==='1';
+  }catch(_){
+    noMore=false;
+  }
+  if(noMore && !urlForce) return;
+
+  const cb=document.getElementById('welcome-demo-no-more');
+  if(cb) cb.checked=false;
+  v.loop=false;
+  v.muted=true;
+  v.addEventListener('ended',function onDemoEnded(){
+    if(black) black.style.display='flex';
+    setTimeout(()=>{
+      if(black) black.style.display='none';
+      try{
+        v.currentTime=0;
+        v.play().catch(()=>{});
+      }catch(_){}
+    },1000);
+  });
+  bd.classList.add('show');
+  bd.setAttribute('aria-hidden','false');
+  // Force visibility even if CSS is altered by the browser / cached styles.
+  bd.style.display='flex';
+  v.play().catch(()=>{});
+}
+function closeWelcomeDemo(){
+  const bd=document.getElementById('welcome-demo-modal');
+  const v=document.getElementById('welcome-demo-video');
+  if(v){ try{ v.pause(); }catch(_){} }
+  if(bd){
+    bd.classList.remove('show');
+    // Undo our "force visible" inline style, so close button/backdrop work.
+    bd.style.display='none';
+    bd.setAttribute('aria-hidden','true');
+  }
+  const cb=document.getElementById('welcome-demo-no-more');
+  const noMore=cb && cb.checked;
+  try{
+    if(noMore) localStorage.setItem(LS_WELCOME_DEMO_NO_MORE,'1');
+    else localStorage.removeItem(LS_WELCOME_DEMO_NO_MORE);
+  }catch(_){}
+}
+
+// ── usage modal ──────────────────────────────────────────────────────────────
+function openUsageModal(){
+  renderUsage();
+  const m=document.getElementById('usage-modal');
+  if(m) m.classList.add('show');
+}
+function closeUsageModal(){
+  const m=document.getElementById('usage-modal');
+  if(m) m.classList.remove('show');
+}
+function fmtTs(iso){
+  try{
+    const d=new Date(iso);
+    return d.toLocaleString();
+  }catch(_){
+    return iso||'';
+  }
+}
+function renderUsage(){
+  const box=document.getElementById('usage-list');
+  if(!box) return;
+  let data=[];
+  try{
+    data=JSON.parse(localStorage.getItem(LS_MEMORY)||'[]')||[];
+  }catch(_){data=[];}
+  if(!data.length){
+    box.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--color-text-tertiary);">No usage yet. Run a prompt and debate first.</div>`;
+    return;
+  }
+  const rows=[...data].reverse().map(item=>{
+    const toks=item && item.tokens_total ? item.tokens_total : 0;
+    const prompt=item && item.prompt ? item.prompt : '';
+    return `<div class="usage-row">
+      <div class="usage-ts">${escapeHtml(fmtTs(item.ts))}</div>
+      <div class="usage-main">
+        <div class="usage-prompt">${escapeHtml(prompt)}</div>
+      </div>
+      <div class="usage-toks">${toks} tok</div>
+    </div>`;
+  });
+  box.innerHTML=rows.join('');
+}
+
+// close modals on backdrop click / esc
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape'){
+    closeKeyModal();
+    closeUsageModal();
+    closeWelcomeDemo();
+  }
+});
+['key-modal','usage-modal','welcome-demo-modal'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el){
+    el.addEventListener('click',(e)=>{ if(e.target===el){
+      if(id==='welcome-demo-modal') closeWelcomeDemo();
+      else el.classList.remove('show');
+    }});
+  }
+});
+
+function exportMemory(){
+  let data=[];
+  try{
+    const raw=localStorage.getItem(LS_MEMORY);
+    data=raw?JSON.parse(raw):[];
+  }catch(_){
+    data=[];
+  }
+  if(!data.length){
+    alert('No memory yet. Ask a few questions first.');
+    return;
+  }
+  const lines=[];
+  lines.push('# Synapse duet memory export');
+  lines.push('');
+  data.forEach((item,idx)=>{
+    lines.push(`## Q${idx+1} — ${item.ts}`);
+    lines.push('');
+    lines.push('**Question**');
+    lines.push(item.prompt||'(empty)');
+    lines.push('');
+    if(item.imageCount){lines.push(`(Attached images: ${item.imageCount}, not included in this export.)`);lines.push('');}
+    lines.push(`**ChatGPT (${item.gptModel||'n/a'})**`);
+    lines.push(item.gptAnswer||'(no answer)');
+    lines.push('');
+    lines.push(`**Claude (${item.claudeModel||'n/a'})**`);
+    lines.push(item.claudeAnswer||'(no answer)');
+    lines.push('');
+  });
+  const text=lines.join('\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById('memory-export');
+    if(btn){
+      const old=btn.textContent;
+      btn.textContent='Copied!';
+      setTimeout(()=>{btn.textContent=old;},1500);
+    }
+  }).catch(()=>{
+    alert('Failed to copy to clipboard. You can copy manually from console.\n\n'+text.slice(0,4000));
+  });
+}
+
+async function exportProfile(){
+  let data=[];
+  try{
+    const raw=localStorage.getItem(LS_MEMORY);
+    data=raw?JSON.parse(raw):[];
+  }catch(_){
+    data=[];
+  }
+  if(!data.length){
+    alert('No memory yet. Ask a few questions first.');
+    return;
+  }
+  if(!getRouterKey()){
+    alert('Need OpenRouter API key to generate profile. Add it at the top first.');
+    return;
+  }
+  const summarySeed=data.slice(-12); // last 12 exchanges
+  const bullets=summarySeed.map((item,idx)=>[
+    `Q${idx+1}: ${item.prompt}`,
+    `ChatGPT: ${item.gptAnswer}`,
+    `Claude: ${item.claudeAnswer}`
+  ].join('\n')).join('\n\n---\n\n');
+
+  const prompt=
+`You are a careful conversation analyst.
+
+You will see a series of past questions and answers between a user and two AI models.
+Infer a rich "user profile" that another AI could use as long-term memory when talking to this user.
+
+Please identify:
+- communication style and tone preferences
+- languages they use and prefer
+- recurring topics and domains of interest
+- how they like answers structured (lists, examples, depth, etc.)
+- risk and safety preferences (conservative vs experimental)
+- tools, APIs, or workflows they frequently use
+- any notable goals, projects, or constraints that appear
+- what the assistant should do MORE of and LESS of
+
+Return a single markdown document with clear sections and bullet points, written in the same primary language as the questions. Do NOT include the raw Q&A transcript. Talk ABOUT the user, not TO the user.`;
+
+  const messages=[
+    {role:'system',content:[{type:'text',text:prompt}]},
+    {role:'user',content:[{type:'text',text:bullets}]}
+  ];
+
+  let profileText='';
+  try{
+    await streamOpenAI({
+      prompt:'',
+      contextMessages:messages,
+      onDelta:(d)=>{profileText+=d;},
+      onDone:()=>{},
+      signal:(new AbortController()).signal
+    });
+  }catch(err){
+    alert('Failed to generate profile: '+(err&&err.message?err.message:err));
+    return;
+  }
+
+  if(!profileText.trim()){
+    alert('Profile generation returned empty text.');
+    return;
+  }
+
+  navigator.clipboard.writeText(profileText).then(()=>{
+    const btn=document.getElementById('profile-export');
+    if(btn){
+      const old=btn.textContent;
+      btn.textContent='Copied!';
+      setTimeout(()=>{btn.textContent=old;},1500);
+    }
+  }).catch(()=>{
+    alert('Profile ready, but failed to copy. You can paste from here:\n\n'+profileText.slice(0,4000));
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+function textToHtml(s){
+  return escapeHtml(s).replace(/\n/g,'<br>');
+}
+
+/** Turn plain-text / light-markdown answers into readable HTML (headings, lists, paragraphs, code). */
+function formatChatHtml(raw){
+  let t=String(raw||'').replace(/\r\n/g,'\n');
+  if(!t.trim()) return '';
+  const codeBlocks=[];
+  t=t.replace(/```([\s\S]*?)```/g,(_,code)=>{
+    const i=codeBlocks.length;
+    codeBlocks.push('<pre class="prose-pre"><code>'+escapeHtml(code.replace(/^\n/,'').replace(/\n$/,''))+'</code></pre>');
+    return '\n\n@@CODEBLOCK'+i+'@@\n\n';
+  });
+  const chunks=t.split(/\n\n+/);
+  const out=[];
+  for(let chunk of chunks){
+    chunk=chunk.trim();
+    if(!chunk) continue;
+    const codeM=chunk.match(/^@@CODEBLOCK(\d+)@@$/);
+    if(codeM){
+      out.push(codeBlocks[parseInt(codeM[1],10)]);
+      continue;
+    }
+    const lines=chunk.split('\n');
+    const allNum=lines.length>1 && lines.every(l=>/^\d+\.\s+/.test(l.trim()));
+    if(allNum){
+      out.push('<ol class="prose-ol">'+lines.map(l=>{
+        const c=l.replace(/^\d+\.\s+/,'').trim();
+        return '<li>'+inlineFormat(escapeHtml(c))+'</li>';
+      }).join('')+'</ol>');
+      continue;
+    }
+    const allBullet=lines.length>1 && lines.every(l=>/^[-*]\s+/.test(l.trim()));
+    if(allBullet){
+      out.push('<ul class="prose-ul">'+lines.map(l=>{
+        const c=l.replace(/^[-*]\s+/,'').trim();
+        return '<li>'+inlineFormat(escapeHtml(c))+'</li>';
+      }).join('')+'</ul>');
+      continue;
+    }
+    const first=lines[0].trim();
+    if(first.startsWith('### ')){
+      out.push('<h4 class="prose-h4">'+inlineFormat(escapeHtml(first.slice(4)))+'</h4>');
+      if(lines.length>1) out.push('<p class="prose-p">'+inlineFormat(escapeHtml(lines.slice(1).join('\n')))+'</p>');
+      continue;
+    }
+    if(first.startsWith('## ')){
+      out.push('<h3 class="prose-h3">'+inlineFormat(escapeHtml(first.slice(3)))+'</h3>');
+      if(lines.length>1) out.push('<p class="prose-p">'+inlineFormat(escapeHtml(lines.slice(1).join('\n')))+'</p>');
+      continue;
+    }
+    if(first.startsWith('# ')){
+      out.push('<h2 class="prose-h2">'+inlineFormat(escapeHtml(first.slice(2)))+'</h2>');
+      if(lines.length>1) out.push('<p class="prose-p">'+inlineFormat(escapeHtml(lines.slice(1).join('\n')))+'</p>');
+      continue;
+    }
+    out.push('<p class="prose-p">'+inlineFormat(escapeHtml(chunk).replace(/\n/g,'<br>'))+'</p>');
+  }
+  return out.join('');
+}
+function inlineFormat(escaped){
+  return escaped
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+}
+
+function applyPanelProse(which){
+  const raw=which==='gpt'?gptAnswer:claudeAnswer;
+  const el=document.getElementById(which+'-text');
+  if(!el||!raw) return;
+  if(el.querySelector('.typing-dots')) return;
+  el.classList.add('prose');
+  el.innerHTML=formatChatHtml(raw);
+}
+
+/** Keep header + composer + panels + debate column within one viewport (inner regions scroll). */
+function fitMainColumn(){
+  // Two-page scroll mode: do not force "one screen" height fitting.
+  // The layout should expand naturally so that the whole aligned answer is visible,
+  // and the "Debate to align" button scrolls to the next page.
+  return;
+  const vh=window.innerHeight;
+  const hh=document.querySelector('.header')?.offsetHeight||56;
+  const keyStrip=document.getElementById('key-onboard');
+  const keyStripH=(keyStrip && keyStrip.classList.contains('show') && keyStrip.offsetParent) ? keyStrip.offsetHeight : 0;
+  const composer=document.querySelector('.composer-stack');
+  const ch=composer?.getBoundingClientRect().height||0;
+  const bar=document.querySelector('.debate-bar');
+  const bh=bar?.offsetHeight||60;
+  const handles=27;
+  const margin=40;
+  const avail=Math.max(200,vh-hh-ch-bh-handles-margin-keyStripH);
+  // Height policy:
+  // - baseline: ~+20% for answer regions.
+  // - when API-key onboarding strip is visible: shrink slightly so it fits.
+  const heightBoost=1.2;
+  const onboardShrink=(keyStripH>0)?0.92:1.0;
+  const heightScale=heightBoost*onboardShrink;
+  const panels=document.getElementById('panels');
+  if(panels){
+    let want=parseInt(localStorage.getItem(LS_PANELS_H),10);
+    if(isNaN(want)||want<=0) want=Math.min(220,Math.floor(avail*0.42));
+    const stack=document.querySelector('.debate-stack');
+    const stackMin=stack?150:0;
+    const maxP=Math.max(120,avail-stackMin);
+    const scaledWant=Math.floor(want*heightScale);
+    const scaledMaxP=Math.floor(maxP*heightScale);
+    panels.style.height=Math.min(scaledWant,scaledMaxP)+'px';
+  }
+  const stack=document.querySelector('.debate-stack');
+  const db=document.getElementById('debate-body');
+  if(stack&&db){
+    const head=stack.querySelector('.debate-zone-header')?.offsetHeight||48;
+    const alignEl=document.getElementById('align-row');
+    const finEl=document.getElementById('final-section');
+    const judgeEl=document.getElementById('judging-strip');
+    const alignH=(alignEl&&alignEl.style.display!=='none'&&alignEl.offsetParent)?alignEl.offsetHeight:0;
+    const finH=(finEl&&finEl.style.display!=='none'&&finEl.offsetParent)?Math.min(finEl.offsetHeight,180*heightBoost):0;
+    const judgeH=(judgeEl&&judgeEl.style.display!=='none'&&judgeEl.offsetParent)?Math.min(judgeEl.offsetHeight,240*heightBoost):0;
+    const room=Math.max(90,stack.clientHeight-head-alignH-finH-judgeH-14);
+    let dh=parseInt(localStorage.getItem(LS_DEBATE_H),10);
+    if(isNaN(dh)||dh<=0) dh=Math.min(120,Math.floor(room*0.45));
+    dh=Math.max(72,Math.floor(dh*heightScale));
+    db.style.height=dh+'px';
+  }
+}
+
+function stopActiveRequests(){
+  if(activeAbort){ try{ activeAbort.abort(); }catch(_){} }
+  activeAbort=null;
+}
+
+function setInFlightUI(on){
+  const send=document.getElementById('send-btn');
+  const stop=document.getElementById('stop-btn');
+  if(send) send.style.display=on?'none':'flex';
+  if(stop) stop.style.display=on?'flex':'none';
+  updateSendButtonState();
+}
+
+function updateSendButtonState(){
+  const send=document.getElementById('send-btn');
+  const input=document.getElementById('prompt-input');
+  if(!send||!input) return;
+  const inFlight=send.style.display==='none';
+  if(!getRouterKey()){
+    // Offline preview (BYOK): without an API key, demos #1-#4 can run (static, no tokens).
+    const val=(input.value||'').trim();
+    const di=getNoKeyDemoIndex(val);
+    const canRunStaticDemo=di>=0 && di<=3;
+    send.disabled=!canRunStaticDemo || inFlight;
+    return;
+  }
+  const hasText=input.value.trim().length>0;
+  send.disabled=!hasText||inFlight;
+}
+
+function updateDebateButtonState(){
+  const btn=document.getElementById('debate-btn');
+  if(!btn) return;
+  btn.disabled=!bothDone||debateRunning;
+}
+
+function handleStop(){
+  stopActiveRequests();
+  // Stop static/demo typing streams too (they use setInterval via streamText()).
+  streamIntervals.forEach(clearInterval);
+  streamIntervals=[];
+  // Ensure we don't allow debate to trigger from partial answers.
+  gptDone=false; claudeDone=false; bothDone=false;
+  document.getElementById('debate-btn').classList.remove('active');
+  debateRunning=false;
+  clearInterval(timerInterval);
+  setInFlightUI(false);
+  setFlowStatus(uiT('flow.stopped'));
+  updateDebateButtonState();
+  document.getElementById('gpt-dot').style.background='var(--color-border-secondary)';
+  document.getElementById('claude-dot').style.background='var(--color-border-secondary)';
+}
+
+function scrollToDebatePage(){
+  try{
+    const el=document.querySelector('.group-debate-block');
+    if(!el) return;
+    const header=document.querySelector('.header');
+    const headerH=header?.offsetHeight||0;
+    const keyStrip=document.getElementById('key-onboard');
+    const keyStripH=(keyStrip && keyStrip.classList.contains('show') && keyStrip.offsetParent) ? keyStrip.offsetHeight : 0;
+    const top=el.getBoundingClientRect().top + window.scrollY - headerH - keyStripH - 6;
+    window.scrollTo({top,behavior:'smooth'});
+  }catch(_){}
+}
+
+function renderAttachments(){
+  const box=document.getElementById('attachments');
+  if(!box) return;
+  box.innerHTML='';
+  promptImages.forEach((img,idx)=>{
+    const pill=document.createElement('div');
+    pill.className='attachment-pill';
+    pill.innerHTML=`<img class="attachment-thumb" src="${img.dataUrl}" alt="img ${idx+1}"><span>Image ${idx+1}</span>`;
+    const btn=document.createElement('button');
+    btn.className='attachment-remove';
+    btn.textContent='×';
+    btn.title='Remove';
+    btn.onclick=()=>{promptImages.splice(idx,1);renderAttachments();};
+    pill.appendChild(btn);
+    box.appendChild(pill);
+  });
+}
+
+function formatTime(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+
+function streamText(text,el,onDone,speed){
+  el.innerHTML='';
+  let i=0;
+  const cur=document.createElement('span');cur.className='cursor';el.appendChild(cur);
+  const scrollTarget=el.closest && el.closest('.panel-body') ? el.closest('.panel-body') : null;
+  const iv=setInterval(()=>{
+    if(i<text.length){
+      el.insertBefore(document.createTextNode(text[i]),cur);
+      i++;
+      // Keep static/demo typing visibly "loading" via auto-scroll.
+      if(scrollTarget) scrollTarget.scrollTop=scrollTarget.scrollHeight;
+    }else{
+      clearInterval(iv);
+      cur.remove();
+      if(scrollTarget) scrollTarget.scrollTop=scrollTarget.scrollHeight;
+      onDone();
+    }
+  },speed);
+  streamIntervals.push(iv);
+}
+
+function checkBothDone(){
+  if(gptDone&&claudeDone){
+    bothDone=true;
+    // append to local memory log
+    try{
+      const raw=localStorage.getItem(LS_MEMORY);
+      const arr=raw?JSON.parse(raw):[];
+      arr.push({
+        ts:currentRunId || new Date().toISOString(),
+        prompt:lastPromptText,
+        gptModel:getGptModel(),
+        claudeModel:getAnthropicModel(),
+        gptAnswer:gptAnswer||document.getElementById('gpt-text').innerText||'',
+        claudeAnswer:claudeAnswer||document.getElementById('claude-text').innerText||'',
+        imageCount:promptImages.length,
+        tokens_total: currentRunTokens || 0
+      });
+      localStorage.setItem(LS_MEMORY,JSON.stringify(arr).slice(0,200000)); // soft cap
+    }catch(_){}
+    document.getElementById('gpt-dot').style.background='#10a37f';
+    document.getElementById('claude-dot').style.background='#d97941';
+    document.getElementById('gpt-copy').classList.add('visible');
+    document.getElementById('claude-copy').classList.add('visible');
+    sessionOutputLang=resolveUnifiedLang(
+      lastPromptText,
+      gptAnswer||document.getElementById('gpt-text').innerText||'',
+      claudeAnswer||document.getElementById('claude-text').innerText||''
+    );
+    setFlowStatus('');
+    setInFlightUI(false);
+    updateDebateButtonState();
+    updateSendButtonState();
+    applyPanelProse('gpt');
+    applyPanelProse('claude');
+    fitMainColumn();
+    // clear attachments UI for next turn (after we've recorded imageCount)
+    promptImages=[];
+    renderAttachments();
+  }
+}
+
+function handleKey(e){
+  // Enter 永远是换行；不再用回车发送，避免误触
+  if(e.key==='Enter' && !e.shiftKey){
+    e.preventDefault();
+    const ta=e.target;
+    const start=ta.selectionStart,end=ta.selectionEnd;
+    const v=ta.value;
+    ta.value=v.slice(0,start)+'\n'+v.slice(end);
+    ta.selectionStart=ta.selectionEnd=start+1;
+    ta.dispatchEvent(new Event('input'));
+  }
+}
+
+function setPanelThinking(which){
+  document.getElementById(which+'-text').innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+}
+
+function setPanelError(which,msg){
+  document.getElementById(which+'-text').innerHTML=`<span style="color:var(--color-text-tertiary);">${escapeHtml(msg)}</span>`;
+}
+
+function setFlowStatus(text){
+  const el=document.getElementById('flow-status');
+  if(!el) return;
+  const t=String(text||'').trim();
+  el.textContent=t;
+  el.style.display=t?'block':'none';
+}
+
+function resetAlignmentVisualState(){
+  const row=document.getElementById('align-row');
+  if(row) row.classList.remove('align-row--warn');
+}
+
+const ALIGN_RING_C=2*Math.PI*28;
+let judgeProgressTimer=null;
+let lastJudgeVisualPct=0;
+
+function setAligningRingPercent(p){
+  const clamped=Math.max(0,Math.min(100,p));
+  lastJudgeVisualPct=clamped;
+  const el=document.getElementById('aligning-ring-fg');
+  const pt=document.getElementById('aligning-ring-pct');
+  if(el) el.style.strokeDashoffset=String(ALIGN_RING_C*(1-clamped/100));
+  if(pt) pt.textContent=Math.round(clamped)+'%';
+}
+
+function stopFinalAligningProgress(){
+  if(judgeProgressTimer){
+    clearInterval(judgeProgressTimer);
+    judgeProgressTimer=null;
+  }
+}
+
+function showFinalAligningOverlay(){
+  const strip=document.getElementById('judging-strip');
+  if(!strip) return;
+  stopFinalAligningProgress();
+  strip.style.display='flex';
+  strip.setAttribute('aria-busy','true');
+  setAligningRingPercent(0);
+  let ringMonotonePeak=0;
+  const t0=Date.now();
+  judgeProgressTimer=setInterval(()=>{
+    const elapsed=(Date.now()-t0)/1000;
+    const wave=0.55*Math.sin(elapsed*1.05)+1;
+    const asympt=88*(1-Math.exp(-elapsed/(3.4*wave)));
+    const slowPhase=1-Math.exp(-elapsed*0.85);
+    const blended=asympt*0.72+slowPhase*26;
+    const ripple=Math.sin(elapsed*2.35)*1.15;
+    let v=blended+ripple;
+    if(elapsed<0.4) v=Math.min(v,12+elapsed*55);
+    v=Math.max(0,Math.min(93,v));
+    v=Math.max(ringMonotonePeak,v);
+    ringMonotonePeak=v;
+    setAligningRingPercent(v);
+  },88);
+  requestAnimationFrame(()=>{ try{ fitMainColumn(); }catch(_){} });
+}
+
+function hideFinalAligningOverlay(){
+  const strip=document.getElementById('judging-strip');
+  if(strip){
+    strip.style.display='none';
+    strip.setAttribute('aria-busy','false');
+  }
+  stopFinalAligningProgress();
+  setAligningRingPercent(0);
+}
+
+function snapAligningRingTo100(){
+  return new Promise(resolve=>{
+    stopFinalAligningProgress();
+    const start=lastJudgeVisualPct||0;
+    let snapPeak=start;
+    const t0=performance.now();
+    const dur=340;
+    function frame(now){
+      const u=Math.min(1,(now-t0)/dur);
+      const e=u<0.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;
+      let p=start+(100-start)*e;
+      p=Math.max(snapPeak,p);
+      snapPeak=p;
+      setAligningRingPercent(p);
+      if(u<1) requestAnimationFrame(frame);
+      else{
+        setAligningRingPercent(100);
+        resolve();
+      }
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+function addDebateMessage(role,name){
+  const body=document.getElementById('debate-body');
+  const div=document.createElement('div');div.className='debate-msg';
+  div.innerHTML=`<div class="davatar ${role}">${role==='gpt'?'G':'C'}</div><div style="min-width:0;"><div class="dmsg-name">${name}</div><div class="dmsg-text"></div></div>`;
+  body.appendChild(div);
+  body.scrollTop=body.scrollHeight;
+  return div.querySelector('.dmsg-text');
+}
+
+async function readSseStream(res,onEvent){
+  const reader=res.body.getReader();
+  const dec=new TextDecoder('utf-8');
+  let buf='';
+  while(true){
+    const {value,done}=await reader.read();
+    if(done) break;
+    buf += dec.decode(value,{stream:true});
+    const parts=buf.split('\n');
+    buf=parts.pop()||'';
+    for(const line of parts){
+      const l=line.trimEnd();
+      if(!l) continue;
+      if(l.startsWith('data:')){
+        const data=l.slice(5).trim();
+        if(data==='[DONE]') return;
+        try{ onEvent(JSON.parse(data)); }catch(_){}
+      }
+    }
+  }
+}
+
+// 使用 OpenRouter 作为 GPT-4o 代理，支持浏览器 CORS
+async function streamOpenAI({prompt,contextMessages,onDelta,onDone,signal,maxTokens}){
+  const key=getOpenAIKey();
+  if(!key) throw new Error('Missing OpenRouter API key');
+  const url='https://openrouter.ai/api/v1/chat/completions';
+  const messages = contextMessages && contextMessages.length
+    ? contextMessages
+    : [{role:'user',content:[{type:'text',text:prompt}]}];
+
+  const body={model:getGptModel(),messages,stream:true};
+  if(maxTokens) body.max_tokens=maxTokens;
+  const res=await fetch(url,{
+    method:'POST',
+    headers:{
+      'Authorization':`Bearer ${key}`,
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify(body),
+    signal
+  });
+  if(!res.ok){
+    const t=await res.text().catch(()=> '');
+    throw new Error(`OpenAI error (${res.status}): ${t||res.statusText}`);
+  }
+  let full='';
+  let usage=null;
+  await readSseStream(res,(evt)=>{
+    if(!evt || typeof evt!=='object') return;
+    // OpenRouter chat.completions: choices[0].delta.content
+    if(evt.usage) usage=evt.usage;
+    const choice = Array.isArray(evt.choices) && evt.choices[0];
+    const delta = choice && choice.delta && typeof choice.delta.content==='string'
+      ? choice.delta.content
+      : '';
+    if(delta){
+      full+=delta;
+      onDelta(delta);
+    }
+  });
+  onDone(full,usage);
+}
+
+async function streamAnthropic({prompt,contextMessages,onDelta,onDone,signal,maxTokens}){
+  const key=getAnthropicKey();
+  if(!key) throw new Error('Missing OpenRouter API key');
+  const url='https://openrouter.ai/api/v1/chat/completions';
+  const messages = contextMessages && contextMessages.length
+    ? contextMessages
+    : [{role:'user',content:[{type:'text',text:prompt}]}];
+
+  const body={model:getAnthropicModel(),messages,stream:true};
+  if(maxTokens) body.max_tokens=maxTokens;
+  const res=await fetch(url,{
+    method:'POST',
+    headers:{
+      'Authorization':`Bearer ${key}`,
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify(body),
+    signal
+  });
+  if(!res.ok){
+    const t=await res.text().catch(()=> '');
+    throw new Error(`Claude via OpenRouter error (${res.status}): ${t||res.statusText}`);
+  }
+  let full='';
+  let usage=null;
+  await readSseStream(res,(evt)=>{
+    if(!evt || typeof evt!=='object') return;
+    if(evt.usage) usage=evt.usage;
+    const choice = Array.isArray(evt.choices) && evt.choices[0];
+    const delta = choice && choice.delta && typeof choice.delta.content==='string'
+      ? choice.delta.content
+      : '';
+    if(delta){
+      full+=delta;
+      onDelta(delta);
+    }
+  });
+  onDone(full,usage);
+}
+
+function handleSend(){
+  const input=document.getElementById('prompt-input');
+  const val=input.value.trim();
+  if(!val) return;
+  if(!getRouterKey()){
+    const di=getNoKeyDemoIndex(val);
+    if(di<0){
+      setFlowStatus('Without an OpenRouter key, only the four “Try this” samples work. Add your key to type freely.');
+      return;
+    }
+    // Offline preview: demo #1-#4 are bundled (static, no tokens).
+    if(di<0 || di>3){
+      setFlowStatus('This sample is not bundled for offline preview. Add your OpenRouter API key.');
+      return;
+    }
+  }
+  lastPromptText=val;
+  currentRunId=new Date().toISOString();
+  currentRunTokens=0;
+  streamIntervals.forEach(clearInterval);streamIntervals=[];
+  stopActiveRequests();
+  gptDone=false;claudeDone=false;bothDone=false;
+  gptAnswer='';claudeAnswer='';
+  fullDebateHistory=[];
+  lastDebateRound4=[];
+  sessionOutputLang=resolveUnifiedLang(val,'','');
+  setInFlightUI(true);
+  updateDebateButtonState();
+  document.getElementById('gpt-dot').style.background='#facc15';
+  document.getElementById('claude-dot').style.background='#facc15';
+  document.getElementById('gpt-empty').style.display='none';
+  document.getElementById('claude-empty').style.display='none';
+  document.getElementById('gpt-content').style.display='block';
+  document.getElementById('claude-content').style.display='block';
+  document.getElementById('gpt-copy').classList.remove('visible');
+  document.getElementById('claude-copy').classList.remove('visible');
+  document.getElementById('gpt-prompt').textContent=val;
+  document.getElementById('claude-prompt').textContent=val;
+  const db=document.getElementById('debate-body');
+  db.innerHTML='<div class="empty-state" id="debate-empty" style="height:100%;"><div class="empty-label mute-placeholder">'+escHtml(uiT("empty.debate"))+'</div></div>';
+  document.getElementById('align-row').style.display='none';
+  resetAlignmentVisualState();
+  document.getElementById('bar-fill').style.width='0';
+  document.getElementById('align-pct').textContent='—';
+  document.getElementById('final-section').style.display='none';
+  hideFinalAligningOverlay();
+  document.getElementById('debate-dot').style.background='var(--color-border-secondary)';
+  document.getElementById('timer-display').style.display='none';
+  document.getElementById('debate-btn').classList.remove('active');
+  debateRunning=false;clearInterval(timerInterval);
+  // do NOT clear input automatically (lets you stop and edit)
+  // keep attachments until responses are recorded, so memory can store imageCount
+  setFlowStatus(uiT('flow.askingBoth'));
+  setPanelThinking('gpt');
+  setPanelThinking('claude');
+
+  const haveKeys = !!getRouterKey();
+  if(!haveKeys){
+    // Slower typing makes the static loading + auto-scroll obvious.
+    const di=getNoKeyDemoIndex(val);
+    let p=null;
+    if(di===0) p=ensureDemo1Data();
+    else if(di===1) p=ensureDemo2Data();
+    else if(di===2) p=ensureDemo3Data();
+    else if(di===3) p=ensureDemo4Data();
+    else{
+      setFlowStatus('This sample needs your OpenRouter API key.');
+      openKeyGuide();
+      try{ openKeyModal(); }catch(_){}
+      setKeyStatus();
+      return;
+    }
+    p.then((data)=>{
+      const gptText=data.gptText||'';
+      const claudeText=data.claudeText||'';
+      setTimeout(()=>{streamText(gptText,document.getElementById('gpt-text'),()=>{gptAnswer=gptText;gptDone=true;checkBothDone();},14);},600);
+      setTimeout(()=>{streamText(claudeText,document.getElementById('claude-text'),()=>{claudeAnswer=claudeText;claudeDone=true;checkBothDone();},16);},900);
+      setKeyStatus();
+    }).catch(()=>{
+      // If parsing fails, keep silent to avoid breaking the page.
+      setKeyStatus();
+    });
+    return;
+  }
+
+  activeAbort=new AbortController();
+  const signal=activeAbort.signal;
+
+  // Build vision-style content with text + images
+  const contentBlocks=[{type:'text',text:val}].concat(promptImages.map(img=>({
+    type:'input_image',
+    image_url:{url:img.dataUrl}
+  })));
+  const userMessages=[
+    {role:'system',content:panelAnswerSystemMessage(sessionOutputLang)},
+    {role:'user',content:contentBlocks}
+  ];
+
+  const gptEl=document.getElementById('gpt-text'); gptEl.innerHTML=''; gptEl.classList.remove('prose');
+  const claudeEl=document.getElementById('claude-text'); claudeEl.innerHTML=''; claudeEl.classList.remove('prose');
+  const gptCur=document.createElement('span'); gptCur.className='cursor'; gptEl.appendChild(gptCur);
+  const claudeCur=document.createElement('span'); claudeCur.className='cursor'; claudeEl.appendChild(claudeCur);
+
+  const onGptDelta=(d)=>{
+    if(!d) return;
+    gptEl.insertBefore(document.createTextNode(d),gptCur);
+    document.getElementById('gpt-panel').scrollTop=document.getElementById('gpt-panel').scrollHeight;
+  };
+  const onClaudeDelta=(d)=>{
+    if(!d) return;
+    claudeEl.insertBefore(document.createTextNode(d),claudeCur);
+    document.getElementById('claude-panel').scrollTop=document.getElementById('claude-panel').scrollHeight;
+  };
+
+  streamOpenAI({
+    prompt:val,
+    contextMessages:userMessages,
+    onDelta:onGptDelta,
+    onDone:(full,usage)=>{ addUsageToCurrentRun(usage); gptAnswer=full; gptCur.remove(); gptDone=true; checkBothDone(); },
+    signal
+  }).catch(err=>{
+    try{ gptCur.remove(); }catch(_){}
+    setPanelError('gpt',String(err && err.message ? err.message : err));
+    gptDone=true; checkBothDone();
+  });
+
+  streamAnthropic({
+    prompt:val,
+    contextMessages:userMessages,
+    onDelta:onClaudeDelta,
+    onDone:(full,usage)=>{ addUsageToCurrentRun(usage); claudeAnswer=full; claudeCur.remove(); claudeDone=true; checkBothDone(); },
+    signal
+  }).catch(err=>{
+    try{ claudeCur.remove(); }catch(_){}
+    setPanelError('claude',String(err && err.message ? err.message : err));
+    claudeDone=true; checkBothDone();
+  });
+}
+
+async function handleDebate(){
+  if(debateRunning||!bothDone)return;
+  scrollToDebatePage();
+  debateRunning=true;
+  updateDebateButtonState();
+  document.getElementById('debate-btn').classList.add('active');
+  setFlowStatus(uiT('flow.debateInProgress'));
+  const de=document.getElementById('debate-empty');if(de)de.remove();
+
+  document.getElementById('align-row').style.display='none';
+  resetAlignmentVisualState();
+  document.getElementById('final-section').style.display='none';
+  hideFinalAligningOverlay();
+  document.getElementById('bar-fill').style.width='0';
+  document.getElementById('align-pct').textContent='—';
+
+  const dot=document.getElementById('debate-dot');
+  dot.style.background='#d97941';
+  let blink=setInterval(()=>{dot.style.opacity=dot.style.opacity==='0'?'1':'0';},500);
+
+  const tel=document.getElementById('timer-display');
+  tel.style.display='flex';
+  tel.classList.remove('urgent');
+  tel.textContent='4 msgs';
+
+  const isContinue=lastDebateRound4.length>=4;
+
+  const haveKeys = !!getRouterKey();
+  if(!haveKeys){
+    if(isContinue){
+      clearInterval(timerInterval);clearInterval(blink);
+      dot.style.opacity='1';dot.style.background='#10a37f';
+      tel.textContent='0:00';tel.classList.remove('urgent');
+      hideFinalAligningOverlay();
+      debateRunning=false;
+      document.getElementById('debate-btn').classList.remove('active');
+      updateDebateButtonState();
+      setFlowStatus('Additional debate rounds require your OpenRouter API key.');
+      return;
+    }
+    const body=document.getElementById('debate-body');
+    body.innerHTML='';
+    fullDebateHistory=[];
+    const baseQuestion=(document.getElementById('gpt-prompt').textContent||'').trim();
+    const di=getNoKeyDemoIndex(baseQuestion);
+    let data=null;
+    if(di===0) data=await ensureDemo1Data();
+    else if(di===1) data=await ensureDemo2Data();
+    else if(di===2) data=await ensureDemo3Data();
+    else if(di===3) data=await ensureDemo4Data();
+    else data=null;
+    if(!data){
+      setFlowStatus('This sample needs your OpenRouter API key.');
+      debateRunning=false;
+      document.getElementById('debate-btn').classList.remove('active');
+      updateDebateButtonState();
+      return;
+    }
+    const msgs=data.debateMsgs||[];
+    for(const m of msgs){
+      const div=document.createElement('div');div.className='debate-msg';
+      div.innerHTML=`<div class="davatar ${m.role}">${m.role==='gpt'?'G':'C'}</div><div style="min-width:0;"><div class="dmsg-name">${m.name}</div><div class="dmsg-text prose">${formatChatHtml(m.text)}</div></div>`;
+      body.appendChild(div);
+    }
+    body.scrollTop=body.scrollHeight;
+    const roundSnap=msgs.map(x=>({speaker:x.name,text:x.text}));
+    fullDebateHistory.push(...roundSnap);
+    lastDebateRound4=roundSnap.slice();
+    await new Promise(r=>setTimeout(r,400));
+    clearInterval(timerInterval);clearInterval(blink);
+    dot.style.opacity='1';dot.style.background='#10a37f';
+    tel.textContent='0:00';tel.classList.remove('urgent');
+    showFinalAligningOverlay();
+    await new Promise(r=>setTimeout(r,520));
+    await snapAligningRingTo100();
+    hideFinalAligningOverlay();
+    document.getElementById('align-row').style.display='flex';
+    resetAlignmentVisualState();
+    const mockPct=85;
+    const pctToUse=data.alignmentPct||mockPct;
+    document.getElementById('bar-fill').style.width=pctToUse+'%';
+    document.getElementById('align-pct').textContent=pctToUse+'%';
+    document.getElementById('align-row').classList.remove('align-row--warn');
+    document.getElementById('final-section').style.display='block';
+    document.getElementById('final-text').innerHTML=formatChatHtml(data.finalText||'');
+    document.getElementById('divergence').innerHTML=data.divergenceHtml||'';
+    document.getElementById('divergence').style.display='block';
+    document.getElementById('final-copy').classList.add('visible');
+    setFlowStatus(uiT('flow.debateComplete').replace('{pct}', String(pctToUse)));
+    debateRunning=false;
+    document.getElementById('debate-btn').classList.remove('active');
+    updateDebateButtonState();
+    fitMainColumn();
+    return;
+  }
+
+  stopActiveRequests();
+  activeAbort=new AbortController();
+  const signal=activeAbort.signal;
+
+  const debateBody=document.getElementById('debate-body');
+  if(!isContinue){
+    debateBody.innerHTML='';
+  }else{
+    const sep=document.createElement('div');
+    sep.className='debate-round-sep';
+    sep.textContent='Next round · 4 more exchanges';
+    debateBody.appendChild(sep);
+  }
+  const transcript=[];
+
+  const baseQuestion=(document.getElementById('gpt-prompt').textContent||'').trim();
+  const initialA=gptAnswer||document.getElementById('gpt-text').innerText||'';
+  const initialB=claudeAnswer||document.getElementById('claude-text').innerText||'';
+
+  const langPack=sessionOutputLang||resolveUnifiedLang(baseQuestion,initialA,initialB);
+  const langLine=langPack.line;
+
+  const systemDebate = `You are in a STRICT 4-message alignment dialogue (order: ChatGPT → Claude → ChatGPT → Claude) about ONE user question only.\n\nLanguage (must match the first ChatGPT and Claude answers in the split panels — same wording language throughout):\n- ${langLine}\n\nAlignment behavior (critical):\n- You are not giving parallel monologues. Each message MUST explicitly engage the other model's previous point (quote or paraphrase it) and then concede, refine, or bridge — never ignore it.\n- Every turn must shrink the disagreement on the USER'S question: name what moved, what is still open, and one concrete step toward one shared recommendation.\n- If you agree with the other side, say so clearly and add one new nuance; do not repeat their wording without adding value.\n- Message 4 (Claude) must state a joint position both could sign under for this question.\n\nHard rules:\n- Discuss ONLY the user's original question. No unrelated topics (no UI, feedback systems, random examples).\n- Each reply: at most 4 short sentences OR ~450 characters.\n- Do not paste your full first answer again; synthesize briefly.\n- No meta ("as an AI").` + (isContinue ? `\n\nContinuation round: a prior G→C→G→C round is provided in the user message. Produce four NEW messages that move agreement further; do not replay or summarize that prior round verbatim.` : '');
+
+  function messageInstructions(turnIdx){
+    if(isContinue){
+      if(turnIdx===0) return `Message 1/4 (ChatGPT). Continue from the previous round's four messages (provided separately). Acknowledge one specific line from Claude's last message, then raise one new refinement — do not repeat the prior round verbatim.`;
+      if(turnIdx===1) return `Message 2/4 (Claude). Acknowledge ChatGPT's last point explicitly; propose one clear way to incorporate it while closing more of the remaining gap.`;
+      if(turnIdx===2) return `Message 3/4 (ChatGPT). Reference Claude's last message; propose a merged synthesis across all rounds that moves to one recommendation.`;
+      return `Message 4/4 (Claude, last debate turn). Reference ChatGPT's last point; state the shared position both can endorse now. If a tiny residual gap remains, one short phrase only.`;
+    }
+    if(turnIdx===0) return `Message 1/4 (ChatGPT). State: (1) one point where both first answers already agree on the question, (2) one concrete disagreement that still matters — then name one way Claude could partially concede or reframe. Stay on-topic.`;
+    if(turnIdx===1) return `Message 2/4 (Claude). Open by acknowledging ChatGPT's last sentence. Narrow to ONE bridge criterion from the original question and show how both answers could align on it (concede or counter with one tight argument).`;
+    if(turnIdx===2) return `Message 3/4 (ChatGPT). Reference Claude's last message directly; propose a merged synthesis or ranking that incorporates their strongest point. Explicitly shrink the remaining gap.`;
+    return `Message 4/4 (Claude, last debate turn). Reference ChatGPT's last point; in 2–4 sentences state the shared position both can endorse for the user's question. If a tiny residual gap remains, one short phrase only.`;
+  }
+
+  async function oneTurn(turn){
+    const role = turn.model==='gpt' ? 'gpt' : 'claude';
+    const name = turn.model==='gpt' ? 'ChatGPT' : 'Claude';
+    const textEl=addDebateMessage(role,name);
+    textEl.innerHTML='';
+    const cur=document.createElement('span');cur.className='cursor';textEl.appendChild(cur);
+
+    const includeInitial = turn.turnIdx===0 && !isContinue;
+    const priorRoundBlock = (isContinue && turn.turnIdx===0)
+      ? `Previous debate round (most recent four messages — continue from this thread):\n${lastDebateRound4.map(x=>`${x.speaker}: ${x.text}`).join('\n')}\n\n`
+      : '';
+    const userContent=
+`ORIGINAL USER QUESTION (do not drift from this):\n${baseQuestion}\n\n---\n${messageInstructions(turn.turnIdx)}\n---\n${
+includeInitial
+? `ChatGPT first answer:\n${initialA}\n\nClaude first answer:\n${initialB}\n\n`
+: ''}${priorRoundBlock}Debate so far (this round only):\n${transcript.map(x=>`${x.speaker}: ${x.text}`).join('\n') || '(start of this round)'}\n\nWrite ONLY this message.`;
+
+    let full='';
+    const onDelta=(d)=>{
+      if(!d) return;
+      full+=d;
+      textEl.insertBefore(document.createTextNode(d),cur);
+      debateBody.scrollTop=debateBody.scrollHeight;
+    };
+
+    const debMax=380;
+    if(turn.model==='gpt'){
+      await streamOpenAI({
+        prompt:'',
+        contextMessages:[
+          {role:'system',content:systemDebate},
+          {role:'user',content:userContent}
+        ],
+        onDelta,
+        onDone:(_,usage)=>{ addUsageToCurrentRun(usage); },
+        signal,
+        maxTokens:debMax
+      });
+    }else{
+      await streamAnthropic({
+        prompt:'',
+        contextMessages:[{role:'user',content:`${systemDebate}\n\n${userContent}`}],
+        onDelta,
+        onDone:(_,usage)=>{ addUsageToCurrentRun(usage); },
+        signal,
+        maxTokens:debMax
+      });
+    }
+    try{cur.remove();}catch(_){}
+    textEl.classList.add('prose');
+    textEl.innerHTML=formatChatHtml(full.trim());
+    transcript.push({speaker:name,text:full.trim()});
+    return full.trim();
+  }
+
+  const histLenBeforeRound=fullDebateHistory.length;
+  const last4BeforeRound=lastDebateRound4.map(x=>({speaker:x.speaker,text:x.text}));
+  try{
+    for(let i=0;i<DEBATE_MSG_ORDER.length;i++){
+      tel.textContent=`${i+1}/4`;
+      const modelName = DEBATE_MSG_ORDER[i]==='gpt'?'ChatGPT':'Claude';
+      setFlowStatus(
+        uiT('flow.debateMessage')
+          .replace('{i}', String(i+1))
+          .replace('{model}', modelName)
+      );
+      await oneTurn({model:DEBATE_MSG_ORDER[i],turnIdx:i});
+    }
+
+    const roundSnap=transcript.map(x=>({speaker:x.speaker,text:x.text}));
+    fullDebateHistory.push(...roundSnap);
+    lastDebateRound4=roundSnap.slice();
+
+    setFlowStatus(uiT('flow.computeFinal'));
+
+    const debateAllChrono=fullDebateHistory.map(x=>`${x.speaker}: ${x.text}`).join('\n');
+    const judgePrompt =
+`You are an evaluator.\n\nLanguage:\n- ${langLine}\n- Write JSON string fields (especially aligned_answer and remaining_divergence) in this SAME language — not English unless the policy above says English.\n\nContext: There may be multiple back-to-back rounds of exactly 4 messages each (order per round: ChatGPT → Claude → ChatGPT → Claude). The transcript below is ALL rounds in order. Then YOU output one final aligned answer. Ignore any off-topic lines.\n\nYour job:\n1. Answer ONLY the original user question — the SAME topic as ORIGINAL QUESTION and the debate. Never substitute an unrelated canned topic.\n2. Produce aligned_answer by FUSING both first answers + on-topic points from EVERY debate round.\n3. aligned_answer MUST be clearly MORE complete and useful than EITHER original answer alone. If the debate was weak, still produce the best on-topic fusion you can.\n\nalignment_pct rules (critical):\n- Output an integer from 1 to 100 only. NEVER output 0.\n- After a real 4-message debate that engages the question, typical values are about 25–92 depending on how much positions converged.\n- Use 1–18 only if the transcript shows almost no mutual engagement or no path to a joint recommendation; still never use 0.\n\nOutput strict JSON only:\n- alignment_pct (integer 1-100, never 0)\n- aligned_answer (string; at least 4 paragraphs OR 12+ bullets; on the original question only)\n- remaining_divergence (string, optional, or empty)\n\nReturn ONLY JSON.\n\nORIGINAL QUESTION:\n${baseQuestion}\n\nChatGPT first answer:\n${initialA}\n\nClaude first answer:\n${initialB}\n\nDebate (all rounds, chronological):\n${debateAllChrono}`;
+
+    showFinalAligningOverlay();
+    let judgeText='';
+    try{
+      await streamOpenAI({
+        prompt:judgePrompt,
+        contextMessages:[{role:'user',content:judgePrompt}],
+        onDelta:(d)=>{judgeText+=d;},
+        onDone:(_,usage)=>{ addUsageToCurrentRun(usage); },
+        signal,
+        maxTokens:1800
+      });
+    }catch(_){
+      judgeText='';
+      try{
+        await streamAnthropic({
+          prompt:judgePrompt,
+          contextMessages:[{role:'user',content:judgePrompt}],
+          onDelta:(d)=>{judgeText+=d;},
+          onDone:(_,usage)=>{ addUsageToCurrentRun(usage); },
+          signal,
+          maxTokens:1800
+        });
+      }catch(__){}
+    }finally{
+      await snapAligningRingTo100();
+      hideFinalAligningOverlay();
+    }
+
+    let parsed=null;
+    try{ parsed=JSON.parse(judgeText.trim()); }catch(_){
+      const m=judgeText.match(/\{[\s\S]*\}/);
+      if(m){ try{ parsed=JSON.parse(m[0]); }catch(__){} }
+    }
+    const rawPctParsed=parseInt(parsed && parsed.alignment_pct,10);
+    const rawPct=Number.isFinite(rawPctParsed)?Math.max(0,Math.min(100,rawPctParsed)):0;
+    const aligned=String(parsed && parsed.aligned_answer ? parsed.aligned_answer : '').trim();
+    const divergence=String(parsed && parsed.remaining_divergence ? parsed.remaining_divergence : '').trim();
+
+    const judgeParseOk=!!parsed;
+    const alignmentFailed=!judgeParseOk||rawPct<=0||!aligned;
+    const displayPct=alignmentFailed?1:Math.max(1,Math.min(100,rawPct));
+
+    const alignRow=document.getElementById('align-row');
+    alignRow.style.display='flex';
+    resetAlignmentVisualState();
+    if(alignmentFailed) alignRow.classList.add('align-row--warn');
+
+    setTimeout(()=>{
+      document.getElementById('bar-fill').style.width=displayPct+'%';
+      let p=0;
+      const inc=Math.max(1,Math.ceil(displayPct/40));
+      const pi=setInterval(()=>{
+        p=Math.min(displayPct,p+inc);
+        document.getElementById('align-pct').textContent=p+'%';
+        if(p>=displayPct) clearInterval(pi);
+      },30);
+    },80);
+
+    setTimeout(()=>{
+      const fs=document.getElementById('final-section');fs.style.display='block';
+      if(alignmentFailed){
+        document.getElementById('final-text').innerHTML=getAlignFailCalloutHtml()+(aligned?formatChatHtml(aligned):'<p class="prose-p" style="color:var(--color-text-tertiary);">No usable aligned_answer was returned for this topic.</p>');
+        document.getElementById('divergence').style.display='none';
+      }else{
+        document.getElementById('final-text').innerHTML=formatChatHtml(aligned);
+        if(divergence){
+          document.getElementById('divergence').innerHTML=formatChatHtml('**'+uiT('final.remainingNuance')+'** '+divergence);
+          document.getElementById('divergence').style.display='block';
+        }else{
+          document.getElementById('divergence').style.display='none';
+        }
+      }
+      fitMainColumn();
+    },480);
+
+    setFlowStatus(alignmentFailed
+      ? uiT('flow.debateFinishedFailed')
+      : uiT('flow.debateComplete').replace('{pct}', String(displayPct))
+    );
+  }catch(err){
+    if(fullDebateHistory.length>histLenBeforeRound){
+      fullDebateHistory.length=histLenBeforeRound;
+      lastDebateRound4=last4BeforeRound;
+    }
+    setFlowStatus(uiT('flow.debateFailed'));
+    hideFinalAligningOverlay();
+    const body=document.getElementById('debate-body');
+    const e=document.createElement('div');
+    e.style.fontSize='12.5px';
+    e.style.lineHeight='1.7';
+    e.style.color='var(--color-text-tertiary)';
+    e.textContent=String(err && err.message ? err.message : err);
+    body.appendChild(e);
+  }finally{
+    clearInterval(timerInterval);clearInterval(blink);
+    dot.style.opacity='1';dot.style.background='#10a37f';
+    tel.textContent='0:00';tel.classList.remove('urgent');
+    hideFinalAligningOverlay();
+    debateRunning=false;
+    document.getElementById('debate-btn').classList.remove('active');
+    updateDebateButtonState();
+  }
+}
+
+function copyText(which){
+  let text='';
+  if(which==='gpt')text=document.getElementById('gpt-text').innerText;
+  else if(which==='claude')text=document.getElementById('claude-text').innerText;
+  else text=document.getElementById('final-text').innerText;
+  navigator.clipboard.writeText(text).catch(()=>{});
+  const btn=document.getElementById(which==='final'?'final-copy':which+'-copy');
+  btn.innerHTML=CHECK_ICON;
+  setTimeout(()=>{btn.innerHTML=COPY_ICON;},1800);
+}
+
+// textarea auto-grow on typing (no height reset on send)
+document.getElementById('prompt-input').addEventListener('input',function(){
+  this.style.height='auto';
+  this.style.height=Math.min(this.scrollHeight,140)+'px';
+  updateSendButtonState();
+  fitMainColumn();
+});
+
+// Strict BYOK mode: any attempt to type/edit should open API-key UI.
+document.getElementById('prompt-input').addEventListener('keydown',function(e){
+  if(getRouterKey()) return;
+  // Even if the textarea is readOnly, keydown often still fires on user input attempts.
+  // We open the key UI on any meaningful key press.
+  if(e.key && (e.key.length===1 || e.key==='Backspace' || e.key==='Delete' || e.key==='Enter')){
+    try{
+      openKeyGuide();
+      openKeyModal();
+    }catch(_){}
+  }
+});
+
+// handle paste images into prompt
+document.getElementById('prompt-input').addEventListener('paste',function(e){
+  if(!getRouterKey()){ e.preventDefault(); return; }
+  const items=e.clipboardData && e.clipboardData.items;
+  if(!items) return;
+  let found=false;
+  for(const it of items){
+    if(it.kind==='file' && it.type.startsWith('image/')){
+      const file=it.getAsFile();
+      if(!file) continue;
+      found=true;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        promptImages.push({mime:file.type,dataUrl:ev.target.result});
+        renderAttachments();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  // don't block text paste; we only append images additionally
+});
+
+// API key persistence
+(function initKeys(){
+  const rk=document.getElementById('router-key');
+  const gm=document.getElementById('gpt-model');
+  const cm=document.getElementById('anthropic-model');
+  if(rk){
+    rk.value=getRouterKey();
+  }
+  if(gm){
+    gm.value=getGptModel();
+    gm.addEventListener('change',()=>{
+      localStorage.setItem(LS_GPT_MODEL,(gm.value||'').trim());
+    });
+  }
+  if(cm){
+    cm.value=getAnthropicModel();
+    cm.addEventListener('change',()=>{
+      localStorage.setItem(LS_ANTHROPIC_MODEL,(cm.value||'').trim());
+    });
+  }
+  setKeyStatus();
+  syncKeyOnboardVisibility();
+  updateComposerKeyGate();
+})();
+
+// ── unified drag-resize factory ───────────────────────────────────────────────
+function makeDrag(handleId, getH, setH){
+  const h=document.getElementById(handleId);
+  let drag=false,sy=0,sh=0;
+  const dn=e=>{const s=e.touches?e.touches[0]:e;drag=true;sy=s.clientY;sh=getH();document.body.style.cursor='ns-resize';e.preventDefault();};
+  const mv=e=>{if(!drag)return;const s=e.touches?e.touches[0]:e;setH(sh+(s.clientY-sy));};
+  const up=()=>{if(drag){drag=false;document.body.style.cursor='';}};
+  h.addEventListener('mousedown',dn);
+  h.addEventListener('touchstart',dn,{passive:false});
+  document.addEventListener('mousemove',mv);
+  document.addEventListener('touchmove',mv,{passive:false});
+  document.addEventListener('mouseup',up);
+  document.addEventListener('touchend',up);
+}
+
+const panelsEl=document.getElementById('panels');
+{
+  const saved=parseInt(localStorage.getItem(LS_PANELS_H),10);
+  const h=isNaN(saved)||saved<=0?220:saved;
+  panelsEl.style.height=h+'px';
+}
+makeDrag('panels-resize',()=>panelsEl.offsetHeight,h=>{
+  const clamped=Math.max(120,Math.min(560,h));
+  panelsEl.style.height=clamped+'px';
+  localStorage.setItem(LS_PANELS_H,String(clamped));
+  fitMainColumn();
+});
+
+const debateBodyEl=document.getElementById('debate-body');
+{
+  const saved=parseInt(localStorage.getItem(LS_DEBATE_H),10);
+  const h=isNaN(saved)||saved<=0?120:saved;
+  debateBodyEl.style.height=h+'px';
+}
+makeDrag('debate-resize',()=>debateBodyEl.offsetHeight,h=>{
+  const stack=document.querySelector('.debate-stack');
+  const head=stack?.querySelector('.debate-zone-header')?.offsetHeight||48;
+  const alignEl=document.getElementById('align-row');
+  const finEl=document.getElementById('final-section');
+  const alignH=(alignEl&&alignEl.style.display!=='none'&&alignEl.offsetParent)?alignEl.offsetHeight:0;
+  const finH=(finEl&&finEl.style.display!=='none'&&finEl.offsetParent)?Math.min(finEl.offsetHeight,220):0;
+  const room=stack?Math.max(90,stack.clientHeight-head-alignH-finH-12):420;
+  const clamped=Math.max(72,Math.min(room,h));
+  debateBodyEl.style.height=clamped+'px';
+  localStorage.setItem(LS_DEBATE_H,String(clamped));
+  fitMainColumn();
+});
+
+const inputEl=document.getElementById('prompt-input');
+{
+  const saved=parseInt(localStorage.getItem(LS_INPUT_H),10);
+  const h=isNaN(saved)||saved<=0?72:saved;
+  inputEl.style.height=h+'px';
+}
+makeDrag('input-resize',()=>inputEl.offsetHeight,h=>{
+  const c=Math.max(42,Math.min(160,h));
+  inputEl.style.height=c+'px';
+  localStorage.setItem(LS_INPUT_H,String(c));
+  fitMainColumn();
+});
+
+window.addEventListener('resize',()=>{ fitMainColumn(); });
+updateSendButtonState();
+updateDebateButtonState();
+initWelcomeDemo();
+syncKeyOnboardVisibility();
+updateComposerKeyGate();
+requestAnimationFrame(()=>fitMainColumn());
+</script>
