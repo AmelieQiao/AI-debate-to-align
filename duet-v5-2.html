@@ -191,6 +191,7 @@ body{font-family:var(--font-sans);background:var(--color-background-primary);col
 .welcome-demo-video-wrap{position:relative;width:100%;aspect-ratio:16/10;max-height:min(56vh,520px);background:#000;}
 .welcome-demo-video{width:100%;height:100%;object-fit:contain;display:block;}
 .welcome-demo-black{position:absolute;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:2;}
+.welcome-demo-fallback{color:#e5e7eb;font-size:13px;line-height:1.45;text-align:center;padding:0 18px;}
 .welcome-demo-note{padding:14px 18px;background:var(--color-background-secondary);border-top:1px solid var(--color-border-tertiary);font-size:13px;line-height:1.55;color:var(--color-text-secondary);font-weight:700;}
 .welcome-demo-note strong{color:var(--color-text-primary);}
 .welcome-demo-actions{padding:12px 18px 16px;display:flex;flex-direction:column;align-items:stretch;gap:12px;border-top:1px solid var(--color-border-tertiary);}
@@ -270,7 +271,7 @@ body{font-family:var(--font-sans);background:var(--color-background-primary);col
     </div>
   </div>
 
-  <!-- First-visit demo video (place your recording at ./assets/demo.mov) -->
+  <!-- First-visit demo video (prefer ./assets/demo.mp4 for web compatibility) -->
   <div class="modal-backdrop welcome-demo-backdrop" id="welcome-demo-modal" aria-hidden="true">
     <div class="modal welcome-demo-modal" role="dialog" aria-modal="true" aria-label="Demo">
       <div class="modal-h">
@@ -279,11 +280,16 @@ body{font-family:var(--font-sans);background:var(--color-background-primary);col
       </div>
       <div class="modal-b welcome-demo-body" style="padding:0;">
         <div class="welcome-demo-video-wrap">
-          <video id="welcome-demo-video" class="welcome-demo-video" playsinline muted preload="metadata" poster="">
+          <video id="welcome-demo-video" class="welcome-demo-video" playsinline muted autoplay preload="metadata" poster="">
+            <source src="assets/demo.mp4" type="video/mp4">
             <source src="assets/demo.mov" type="video/quicktime">
-            <source src="assets/demo.mov" type="video/mp4">
           </video>
-          <div id="welcome-demo-black" class="welcome-demo-black" aria-hidden="true"></div>
+          <div id="welcome-demo-black" class="welcome-demo-black" aria-hidden="true">
+            <div id="welcome-demo-fallback" class="welcome-demo-fallback" style="display:none;">
+              Demo video failed to load.<br/>
+              Please replace <code>assets/demo.mp4</code> with an H.264 MP4 file.
+            </div>
+          </div>
         </div>
         <div class="welcome-demo-note">
           <strong>This is a demo only</strong> — it shows how duet works.<br/>
@@ -1860,8 +1866,15 @@ function initWelcomeDemo(){
   const bd=document.getElementById('welcome-demo-modal');
   const v=document.getElementById('welcome-demo-video');
   const black=document.getElementById('welcome-demo-black');
+  const fb=document.getElementById('welcome-demo-fallback');
   const urlForce = new URLSearchParams((location && location.search) ? location.search : '').get('showDemo')==='1';
   if(!bd || !v) return;
+  let demoVideoBroken=false;
+  const showVideoFallback=()=>{
+    demoVideoBroken=true;
+    if(fb) fb.style.display='block';
+    if(black) black.style.display='flex';
+  };
   // Some private-browsing modes may block localStorage. Never let that break the UI.
   let noMore=false;
   try{
@@ -1875,13 +1888,18 @@ function initWelcomeDemo(){
   if(cb) cb.checked=false;
   v.loop=false;
   v.muted=true;
+  v.addEventListener('loadeddata',()=>{
+    if(!demoVideoBroken && black) black.style.display='none';
+  });
+  v.addEventListener('error',()=>{ showVideoFallback(); });
   v.addEventListener('ended',function onDemoEnded(){
+    if(demoVideoBroken) return;
     if(black) black.style.display='flex';
     setTimeout(()=>{
       if(black) black.style.display='none';
       try{
         v.currentTime=0;
-        v.play().catch(()=>{});
+        v.play().catch(()=>{ showVideoFallback(); });
       }catch(_){}
     },1000);
   });
@@ -1889,7 +1907,7 @@ function initWelcomeDemo(){
   bd.setAttribute('aria-hidden','false');
   // Force visibility even if CSS is altered by the browser / cached styles.
   bd.style.display='flex';
-  v.play().catch(()=>{});
+  v.play().catch(()=>{ showVideoFallback(); });
 }
 function closeWelcomeDemo(){
   const bd=document.getElementById('welcome-demo-modal');

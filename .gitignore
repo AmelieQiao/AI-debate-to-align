@@ -1,6 +1,7 @@
 .DS_Store
 *.mov
 *.mp4
+!assets/demo.mp4
 .env
 .env.*
 *.local
