@@ -22,6 +22,7 @@ v5.2
   - 3.5Sonnet
   - 3.5Haiku
 
+- 支持各种语言 / Multiple languages supported
 - 一开始的弹窗demo展示如何使用 / Demo window at start to show how to use
 - Prompt支持文字和图片（图片大小由上游 OpenRouter 限制）/ Supports text + images (image limits depend on upstream OpenRouter)
 - BYOK：OpenRouter API key 由用户提供 / BYOK: user-provided OpenRouter API key
