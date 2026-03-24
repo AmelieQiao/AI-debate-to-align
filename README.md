@@ -9,12 +9,7 @@
 
 ## Demo video / 演示视频
 
-Compressed for README loading. The in-app welcome modal still uses the full-quality `assets/demo.mp4`. /
-为 README 加载更快而压缩；网页弹窗仍使用完整版 `assets/demo.mp4`。
-
-<video src="https://raw.githubusercontent.com/AmelieQiao/AI-debate-to-align/main/assets/demo-readme.mp4" controls playsinline muted preload="metadata" width="100%" style="max-width:720px;border-radius:10px;"></video>
-
-If the player is blank, open the [MP4 directly](https://raw.githubusercontent.com/AmelieQiao/AI-debate-to-align/main/assets/demo-readme.mp4) or ensure `assets/demo-readme.mp4` is on your default branch (`main`). / 若无法播放，请直接打开 MP4 链接，或确认默认分支名是否为 `main`。
+https://github.com/user-attachments/assets/6ef3706e-a997-43a1-83f4-95eff3538ff5
 
 ## 1. How to use
 1. ✅ Open the [live site](https://ai-debate-to-align.vercel.app/) **or** double-click `index.html` locally. / 直接打开 Vercel 链接，或本地双击 `index.html`。
