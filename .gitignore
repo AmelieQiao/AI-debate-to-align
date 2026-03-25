@@ -1,3 +1,4 @@
 node_modules
 .DS_Store
 assets/*.mov
+assets/demo-readme.mp4

@@ -47,7 +47,7 @@ Static single-page app — **no** required folder reorganization for GitHub or V
 ```
 ├── index.html          → redirects to duet-v5-2.html
 ├── duet-v5-2.html      → main app (all UI + logic)
-└── assets/             → demo.mp4 (in-app modal), demo-readme.mp4 (README embed), static demo .md
+└── assets/             → demo.mp4 (in-app modal), static demo .md
 ```
 
 You do **not** need to change this layout for deployment; Vercel serves these files as static assets.
