@@ -1,4 +1,5 @@
 node_modules
 .DS_Store
+.cursorrules
 assets/*.mov
 assets/demo-readme.mp4
