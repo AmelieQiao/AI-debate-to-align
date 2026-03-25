@@ -1,8 +1,2 @@
+node_modules
 .DS_Store
-*.mov
-*.mp4
-!assets/demo.mp4
-!assets/demo-readme.mp4
-.env
-.env.*
-*.local
